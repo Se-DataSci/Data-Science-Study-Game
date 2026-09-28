@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Status 200 Study Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{
+  --bg:#EDF0F4; --surface:#FFFFFF; --surface2:#E3E8EF; --ink:#14213D; --muted:#5A6781;
+  --line:#CBD3DF; --accent:#2B59C3; --accent-ink:#FFFFFF; --ok:#1F8A55; --ok-bg:#E1F3E9;
+  --bad:#C0392F; --bad-bg:#FBE5E3; --amber:#B7791F; --amber-bg:#FDF1DC; --myst:#7B4FC9; --myst-bg:#EFE7FB;
+  --grass:#BFD9A8; --grass2:#A6C98E; --dirt:#E9D3A6; --dirt-hi:#F6E6C4; --dirt-edge:#CDAE78;
+  --tree:#4E8F5A; --tree2:#72B27A; --pine:#3F7A4F; --trunk:#7A5433; --rock:#A3AAB4; --rock2:#CDD2D9; --bush:#5C9E5F;
+  --shd:rgba(30,50,20,.18); --badge-ink:#FFFFFF; --ring:#FFFFFF;
+  --skin:#F0C193; --hat:#8A5A34; --pants:#33415C;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--bg:#0F1522;--surface:#18202F;--surface2:#222C3E;--ink:#E6EBF3;--muted:#98A4BA;
+  --line:#2F3A50;--accent:#7FA2F5;--accent-ink:#0F1522;--ok:#5CCB8E;--ok-bg:#16301F;--bad:#F08A80;--bad-bg:#3A1C1A;--amber:#E9B45C;--amber-bg:#3A2C12;--myst:#B69BF0;--myst-bg:#2A2040;
+  --grass:#1F3326;--grass2:#2A4533;--dirt:#5E4D34;--dirt-hi:#766246;--dirt-edge:#463925;
+  --tree:#2F6B40;--tree2:#3F8753;--pine:#28573A;--trunk:#5A3E26;--rock:#5B6470;--rock2:#7A8491;--bush:#2F6E3E;
+  --shd:rgba(0,0,0,.3);--badge-ink:#0F1522;--ring:#18202F;--skin:#E2AE80;--hat:#A8744A;--pants:#46557A;}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--bg:#0F1522;--surface:#18202F;--surface2:#222C3E;--ink:#E6EBF3;--muted:#98A4BA;
+  --line:#2F3A50;--accent:#7FA2F5;--accent-ink:#0F1522;--ok:#5CCB8E;--ok-bg:#16301F;--bad:#F08A80;--bad-bg:#3A1C1A;--amber:#E9B45C;--amber-bg:#3A2C12;--myst:#B69BF0;--myst-bg:#2A2040;
+  --grass:#1F3326;--grass2:#2A4533;--dirt:#5E4D34;--dirt-hi:#766246;--dirt-edge:#463925;
+  --tree:#2F6B40;--tree2:#3F8753;--pine:#28573A;--trunk:#5A3E26;--rock:#5B6470;--rock2:#7A8491;--bush:#2F6E3E;
+  --shd:rgba(0,0,0,.3);--badge-ink:#0F1522;--ring:#18202F;--skin:#E2AE80;--hat:#A8744A;--pants:#46557A;}
+*{box-sizing:border-box}
+html,body{margin:0}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;padding:0 16px}
+.wrap{max-width:900px;margin:0 auto;padding-block:24px 60px;display:flex;flex-direction:column;gap:16px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.brand h1{font-family:var(--display);font-weight:800;font-size:clamp(32px,6vw,50px);line-height:1;margin:0;letter-spacing:-.02em}
+.brand h1 .code{font-family:var(--mono);font-weight:700;color:var(--ok);font-size:.78em;letter-spacing:-.04em}
+.brand p{margin:6px 0 0;color:var(--muted)}
+.stats{display:flex;gap:8px;font-family:var(--mono);font-size:13px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-variant-numeric:tabular-nums}
+.stat b{color:var(--accent)}
+nav.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:var(--surface2);padding:5px;border-radius:12px}
+nav.modes button{font:600 15px var(--body);border:0;background:transparent;color:var(--muted);padding:10px 6px;border-radius:8px;cursor:pointer}
+nav.modes button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(20,33,61,.15)}
+nav.modes button small{display:block;font:500 11px var(--mono);opacity:.8}
+.topics{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 13px var(--mono);border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:5px 10px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* ---------- trail ---------- */
+.hud{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;font:500 13px var(--mono);color:var(--muted)}
+.hud b{color:var(--ink);font-size:16px;font-variant-numeric:tabular-nums}
+.dots{display:flex;gap:5px;list-style:none;margin:0;padding:0}
+.dots li{width:24px;height:24px;border-radius:50%;border:2px dashed var(--line);display:grid;place-items:center;background:var(--surface)}
+.dots li.now{border:2px solid var(--accent)}
+.dots li.ok{border:2px solid var(--ok);background:var(--ok-bg)}
+.dots li.no{border:2px solid var(--bad);background:var(--bad-bg)}
+.dots li svg{width:14px;height:14px}
+.scene-wrap{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--grass)}
+#scene{display:block;width:100%;height:auto;aspect-ratio:800/500;touch-action:manipulation}
+.prompt{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font:600 14px var(--body);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.prompt kbd{margin-left:4px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.ico-dot{width:24px;height:24px;border-radius:50%;display:inline-grid;place-items:center;background:var(--c)}
+.ico-dot svg{width:15px;height:15px;fill:var(--badge-ink)}
+.easy{--c:var(--ok)} .medium{--c:var(--amber)} .hard{--c:var(--bad)} .mystery{--c:var(--myst)}
+.dots li svg{fill:var(--c)}
+
+/* svg world */
+.grassbg{fill:var(--grass)} .grassmark{stroke:var(--grass2);stroke-width:2.5;stroke-linecap:round;fill:none}
+.edge{fill:none;stroke:var(--dirt-edge);stroke-width:56;stroke-linecap:round}
+.dirt{fill:none;stroke:var(--dirt);stroke-width:44;stroke-linecap:round;transition:stroke .2s}
+.hit{fill:none;stroke:transparent;stroke-width:96;pointer-events:stroke;cursor:pointer}
+.branch.hover .dirt{stroke:var(--dirt-hi)}
+.branch,.sign{transition:opacity .5s}
+.branch.dim,.sign.dim{opacity:.3;pointer-events:none}
+.fresh{animation:fadein .6s ease-out}
+@keyframes fadein{from{opacity:0}}
+.sign{cursor:pointer}
+.sign .badge{fill:var(--c);stroke:var(--ring);stroke-width:3;transform-box:fill-box;transform-origin:center;transition:transform .2s}
+.sign.hover .badge,.sign:hover .badge{transform:scale(1.12)}
+.sign .ico{fill:var(--badge-ink);pointer-events:none}
+.sign .post{fill:var(--trunk)}
+.slabel{font:700 12px var(--mono);fill:var(--ink);stroke:var(--grass);stroke-width:5;paint-order:stroke;letter-spacing:.06em;pointer-events:none}
+.sign.mystery .badge{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+.sign.reveal .badge{animation:reveal .7s ease-out}
+@keyframes reveal{0%{transform:scale(.4) rotate(-180deg)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+.shd{fill:var(--shd)} .trunk{fill:var(--trunk)} .tree{fill:var(--tree)} .tree2{fill:var(--tree2)} .pine{fill:var(--pine)}
+.bush{fill:var(--bush)} .rock{fill:var(--rock)} .rock2{fill:var(--rock2)} .tuft{stroke:var(--tree);stroke-width:2.5;stroke-linecap:round;fill:none}
+.f1{fill:#E86A8A} .f2{fill:#F2C14E} .f3{fill:#FFFFFF} .fc{fill:#F2C14E}
+.h-leg{fill:var(--pants)} .h-pack{fill:var(--amber)} .h-shirt{fill:var(--accent)} .h-skin{fill:var(--skin)} .h-eye{fill:#1b1b1b} .h-hat{fill:var(--hat)} .h-band{fill:var(--bad)}
+.float{font:800 22px var(--display);text-anchor:middle;stroke:var(--surface);stroke-width:5;paint-order:stroke}
+
+/* encounter */
+.enc{padding:16px}
+.enc-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(16px,3vw,24px);display:flex;flex-direction:column;gap:12px}
+@media (min-width:700px){
+  .enc{position:absolute;inset:0;display:grid;place-items:center;padding:14px;background:color-mix(in srgb,var(--bg) 45%,transparent);backdrop-filter:blur(2px)}
+  .enc-card{width:min(640px,100%);max-height:100%;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.25);animation:rise .35s ease-out}
+}
+@keyframes rise{from{transform:translateY(16px);opacity:0}}
+.dpill{display:inline-flex;align-items:center;gap:6px;font:700 12px var(--mono);color:var(--c);text-transform:uppercase;letter-spacing:.05em}
+.dpill svg{width:16px;height:16px;fill:var(--c)}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;font:500 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;flex-wrap:wrap}
+.bar{height:4px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.q{font-family:var(--display);font-weight:600;font-size:clamp(19px,3vw,24px);line-height:1.25;margin:0;text-wrap:balance}
+.choices{display:grid;gap:8px}
+.choice{text-align:left;font:16px/1.4 var(--body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;cursor:pointer;display:flex;gap:12px;align-items:flex-start}
+.choice:hover:not(:disabled){border-color:var(--accent)}
+.choice .k{font:700 12px var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:1px 6px;flex:none;margin-top:1px}
+.choice.right{border-color:var(--ok);background:var(--ok-bg)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.choice:disabled{cursor:default}
+.feedback{display:flex;gap:12px;align-items:flex-start;border-radius:10px;padding:12px 14px}
+.feedback.ok{background:var(--ok-bg)} .feedback.no{background:var(--bad-bg)}
+.status{font:700 13px var(--mono);white-space:nowrap;padding-top:2px}
+.ok .status{color:var(--ok)} .no .status{color:var(--bad)}
+.feedback p{margin:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{font:700 15px var(--body);border:0;border-radius:10px;padding:11px 18px;cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+.btn.good{background:var(--ok);color:var(--accent-ink)} .btn.warn{background:var(--amber);color:var(--accent-ink)}
+button:focus-visible,.card:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.note{font-family:var(--mono);font-size:15px;line-height:1.6;background:var(--amber-bg);border-left:4px solid var(--amber);padding:14px 16px;border-radius:0 10px 10px 0}
+.tag{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+
+/* short answer */
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+#sa{width:100%;font:16px/1.45 var(--body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;resize:vertical;min-height:84px}
+#sa:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+#sa:disabled{opacity:.8}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.feedback.half{background:var(--amber-bg)} .half .status{color:var(--amber)}
+.feedback.sa>div{display:grid;gap:6px}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:2px;font-size:15px}
+.keys .hit{color:var(--ok)} .keys .miss{color:var(--muted)}
+.model{margin:4px 0 0}
+.dots li.half{border:2px solid var(--amber);background:var(--amber-bg)}
+.grade{font:700 12px var(--mono);margin-left:6px;white-space:nowrap}
+.grade.ok{color:var(--ok)} .grade.half{color:var(--amber)} .grade.no{color:var(--bad)}
+.sa-note{flex-basis:100%}
+.lvls{display:flex;flex-wrap:wrap;gap:6px}
+.lvl{display:inline-flex;gap:8px;align-items:baseline;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:14px}
+.lvl b{font-variant-numeric:tabular-nums}
+/* summary */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:clamp(18px,4vw,30px);display:flex;flex-direction:column;gap:18px}
+.sum-top{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:flex-end}
+.sum-top h2{font-family:var(--display);font-size:clamp(40px,8vw,64px);line-height:1;margin:0;font-variant-numeric:tabular-nums}
+.sum-top .status{font-size:15px}
+.breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.breakdown div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.breakdown b{font-size:18px;font-variant-numeric:tabular-nums}
+.path-recap{display:flex;gap:6px;flex-wrap:wrap}
+.missed{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.missed>li{border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:12px 14px;display:grid;gap:4px}
+.missed .q2{font-weight:700}
+.missed .you{color:var(--bad)} .missed .ans{color:var(--ok)}
+.missed .why{color:var(--muted);font-size:15px}
+
+/* practice modes */
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(18px,4vw,32px);min-height:380px;display:flex;flex-direction:column;gap:16px}
+.card{perspective:1200px;cursor:pointer;min-height:240px;border-radius:14px}
+.card .inner{position:relative;width:100%;min-height:240px;transition:transform .45s;transform-style:preserve-3d}
+.card.flip .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;border:1.5px solid var(--line);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px;gap:10px}
+.face.front{background:var(--surface2)}
+.face.back{background:var(--surface);transform:rotateY(180deg);border-color:var(--accent)}
+.face .term{font-family:var(--display);font-weight:800;font-size:clamp(24px,4.5vw,34px);line-height:1.15}
+.face .def{font-size:18px;max-width:52ch}
+.face .hint{font:500 12px var(--mono);color:var(--muted)}
+.match{display:grid;grid-template-columns:1fr 1.6fr;gap:10px}
+.match .col{display:grid;gap:8px;align-content:start}
+.tile{font:15px/1.35 var(--body);color:var(--ink);text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;min-height:52px}
+.tile.term{font-weight:700}
+.tile.sel{border-color:var(--accent);background:var(--surface2)}
+.tile.done{border-color:var(--ok);background:var(--ok-bg);color:var(--muted);cursor:default}
+.tile.shake{animation:shake .35s;border-color:var(--bad)}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.summary h2{font-family:var(--display);font-size:32px;margin:0}
+.stage .missed li{border-left-width:1px}
+kbd{font:600 11px var(--mono);border:1px solid var(--line);border-radius:4px;padding:0 4px;background:var(--surface)}
+footer{color:var(--muted);font-size:13px}
+@media (max-width:560px){nav.modes{grid-template-columns:repeat(2,1fr)} .match{grid-template-columns:1fr} .prompt{font-size:12px;top:8px} .prompt kbd{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-easy" viewBox="0 0 24 24"><path d="M20 4C10 4.5 4.5 9.5 4.5 17.5c0 .9.1 1.7.2 2.5l1.6-1.6C7.5 12.5 11 9 15.5 7.5 12 9.8 9 13 7.6 17.2 14.6 17.4 19.8 12.5 20 4z"/></symbol>
+    <symbol id="i-medium" viewBox="0 0 24 24"><path d="M13.5 2 5 13.5h6L9.8 22 19 10h-6.2z"/></symbol>
+    <symbol id="i-hard" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C7 2 3.5 5.6 3.5 10.2c0 2.9 1.4 5.2 3.5 6.5V20a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-3.3c2.1-1.3 3.5-3.6 3.5-6.5C20.5 5.6 17 2 12 2zM6.9 11a1.9 1.9 0 1 0 3.8 0a1.9 1.9 0 1 0-3.8 0zM13.3 11a1.9 1.9 0 1 0 3.8 0a1.9 1.9 0 1 0-3.8 0zM12 14l-1.3 2.2h2.6zM10.1 18.2h1.1V21h-1.1zM12.8 18.2h1.1V21h-1.1z"/></symbol>
+    <symbol id="i-mystery" viewBox="0 0 24 24"><path d="M12 2.5c-3.6 0-6.2 2.2-6.4 5.5h3.6c.2-1.4 1.2-2.3 2.7-2.3 1.6 0 2.6.9 2.6 2.2 0 1.1-.5 1.7-1.9 2.6-1.8 1.1-2.5 2.3-2.4 4.3v.9h3.5v-.7c0-1.2.4-1.7 1.9-2.6 1.8-1.1 2.8-2.5 2.8-4.6 0-3.3-2.7-5.6-6.4-5.6zM12 17.4a2.1 2.1 0 1 0 0 4.2 2.1 2.1 0 0 0 0-4.2z"/></symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1><span class="code">200</span> Status OK</h1>
+      <p>Pick your path, answer what you find, and make it 10 stops down the trail.</p>
+    </div>
+    <div class="stats" aria-live="polite">
+      <span class="stat">streak <b id="streak">0</b></span>
+      <span class="stat">best <b id="best">0</b></span>
+    </div>
+  </header>
+
+  <nav class="modes" aria-label="Game mode">
+    <button id="m-trail" data-mode="trail" aria-pressed="true">Trail<small>10-stop round</small></button>
+    <button id="m-cards" data-mode="cards" aria-pressed="false">Flashcards<small>flip + sort</small></button>
+    <button id="m-match" data-mode="match" aria-pressed="false">Match<small>beat the clock</small></button>
+    <button id="m-spot" data-mode="spot" aria-pressed="false">Spot the Error<small>true or false</small></button>
+  </nav>
+
+  <div class="topics" id="topics" aria-label="Topics"></div>
+
+  <section id="trail" style="display:flex;flex-direction:column;gap:12px">
+    <div class="hud">
+      <span>Stop <b id="stopN">1</b> / 10</span>
+      <ol class="dots" id="dots" aria-label="Trail progress"></ol>
+      <span>Score <b id="scoreN">0</b></span>
+    </div>
+    <div class="scene-wrap" id="sceneWrap">
+      <svg id="scene" viewBox="0 0 800 500" role="img" aria-label="Trail map. Choose a path with the arrow keys or by clicking a sign.">
+        <defs>
+          <pattern id="grassPat" width="96" height="96" patternUnits="userSpaceOnUse">
+            <rect width="96" height="96" class="grassbg"/>
+            <path class="grassmark" d="M14 26l-2-7M18 26v-8M22 26l2-7M66 74l-2-7M70 74v-8M74 74l2-7M58 20l-1-5M61 20v-6"/>
+          </pattern>
+        </defs>
+        <g id="world">
+          <rect x="-20000" y="-400000" width="40000" height="402000" fill="url(#grassPat)"/>
+          <g id="paths"></g><g id="scenery"></g><g id="markers"></g>
+        </g>
+        <g id="hero" transform="translate(400 460) scale(1.15)">
+          <ellipse cx="0" cy="2" rx="17" ry="6" class="shd"/>
+          <g id="heroFlip"><g id="heroBody">
+            <rect id="legL" x="-8" y="-18" width="7" height="18" rx="3" class="h-leg"/>
+            <rect id="legR" x="1" y="-18" width="7" height="18" rx="3" class="h-leg"/>
+            <rect x="-19" y="-44" width="12" height="20" rx="4" class="h-pack"/>
+            <rect x="-11" y="-46" width="22" height="30" rx="8" class="h-shirt"/>
+            <circle cx="1" cy="-56" r="11" class="h-skin"/>
+            <circle cx="6" cy="-57" r="1.8" class="h-eye"/>
+            <path d="M-9 -63q1-12 10-12t10 12z" class="h-hat"/>
+            <ellipse cx="1" cy="-63" rx="17" ry="4" class="h-hat"/>
+            <rect x="-9" y="-67" width="20" height="3" class="h-band"/>
+          </g></g>
+        </g>
+        <g id="fx"></g>
+      </svg>
+      <div class="prompt" id="prompt">Choose a path <kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd></div>
+      <div class="enc" id="enc" hidden><div class="enc-card" id="encCard"></div></div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="panel" id="summary" hidden></div>
+  </section>
+
+  <section class="stage" id="stage" aria-live="polite" hidden></section>
+
+  <footer>Keyboard: <kbd>←</kbd> <kbd>↑</kbd> <kbd>→</kbd> pick a path · <kbd>1</kbd>–<kbd>4</kbd> answer · <kbd>Enter</kbd> submit a short answer · <kbd>Enter</kbd> continue · <kbd>Space</kbd> flip card.</footer>
+</div>
+
+<script>
+const TOPICS={priv:"Privacy",api:"APIs & Auth",git:"Version Control",lic:"Licenses & Docs",aws:"AWS Cloud",data:"SQL & Deploy",eth:"AI Ethics"};
+
+// [topic, term, definition]
+const CARDS=[
+["priv","Minimization","Only collect and keep the data needed for the purpose"],
+["priv","Suppression","Eliminating identifiable data entirely"],
+["priv","Masking","Hiding part of a value while keeping its structure (***-**-1234)"],
+["priv","Pseudonymization","Replacing identifiers with a token; reversible with a separate key, so not full anonymization"],
+["priv","Generalization","Reducing variability by grouping values into categories (age 34 → 30–39)"],
+["priv","Synthetic data","New fake values that keep the same statistical properties"],
+["priv","Quasi-identifier","Info that doesn't identify you alone but can when combined (ZIP + age + gender)"],
+["priv","Sensitive attribute","Info that should not be revealed, like a diagnosis or salary"],
+["priv","K-anonymity","Every record matches at least k−1 others on its quasi-identifiers"],
+["priv","L-diversity","Each k-anonymous group contains at least l different sensitive values"],
+["priv","T-closeness","The sensitive-value distribution in each group stays close (within t) to the whole data set's"],
+["priv","Mondrian algorithm","Recursively splits data at the median of a quasi-identifier until groups can't go smaller than k"],
+["api","GET","HTTP method that retrieves a resource"],
+["api","POST","HTTP method that creates a new resource"],
+["api","PUT","HTTP method that updates or replaces a whole resource"],
+["api","PATCH","HTTP method that partially updates a resource"],
+["api","DELETE","HTTP method that removes a resource"],
+["api","200","Status code: OK"],
+["api","201","Status code: Created"],
+["api","400","Status code: Bad Request"],
+["api","401","Status code: Unauthorized (not authenticated)"],
+["api","403","Status code: Forbidden (authenticated but not allowed)"],
+["api","404","Status code: Not Found"],
+["api","Authentication","Answers “Who is this user?”"],
+["api","Authorization","Answers “What is this user allowed to do?”"],
+["api","Bearer token","A proof pass sent instead of credentials; whoever holds it gets access"],
+["api","OAuth 2.0","Authorization framework using scoped access tokens so 3rd parties get access without your password"],
+["api","Principle of least privilege","Give a client only the minimum access needed for the task"],
+["api","HTTPS","Hypertext Transfer Protocol Secure: encrypts data between client and server"],
+["api","API","A set of rules that lets software programs communicate"],
+["git","Apache Subversion (SVN)","Centralized version control; commits go straight to one central server"],
+["git","Git","Distributed version control; every clone has the full history"],
+["git","git add","Stages changes so they're included in the next commit"],
+["git","git commit","Saves a snapshot of staged changes to the local repository"],
+["git","git push","Uploads local commits to a remote repository"],
+["git","git pull","Gets remote updates and merges them into your branch (fetch + merge)"],
+["git","git clone","Copies a remote repository onto your machine"],
+["git","git status","Shows which files are modified, staged, or untracked"],
+["git","git fetch","Downloads new commits from the remote without merging them"],
+["git","Branch","A separate line of development from the main version"],
+["git","Pull request","A request to merge one branch into another, allowing code review first"],
+["git","Docstring","Text inside code that explains what a function, class, or module does"],
+["lic","Copyleft","Free to use and modify, but distributed modifications must keep the same license (GPL)"],
+["lic","Permissive license","Free to use; modifications don't have to be open-source"],
+["lic","Proprietary license","Vendor keeps the rights; no modification unless the vendor authorizes it"],
+["lic","MIT License","Short permissive license"],
+["lic","BSD License","Permissive; you can't use the authors' names to endorse your derived product"],
+["lic","Apache 2.0","Permissive license with an explicit patent grant and a NOTICE requirement"],
+["lic","MATLAB","Example of proprietary software"],
+["lic","README","Plain-text file explaining what the project is, why, and how to use it"],
+["lic","src/","Folder holding the source code and data-loading files"],
+["lic","config/","Folder holding the settings the app needs to run"],
+["lic","Requirements file","Lists the packages needed to recreate the environment (requirements.txt)"],
+["aws","Serverless","Run code without managing servers; the provider handles infrastructure and scaling"],
+["aws","Lambda","Serverless functions: short, event-triggered code, pay per run"],
+["aws","Fargate","Serverless compute for running containers"],
+["aws","EC2","Virtual servers (instances) you pick and manage; most flexibility"],
+["aws","SageMaker","Managed ML service with Jupyter notebooks for training and deploying models"],
+["aws","Security IN the cloud","The customer's responsibility (data, access settings)"],
+["aws","Security OF the cloud","AWS's responsibility (hardware, data centers)"],
+["aws","IAM user","Individual identity needing long-term access"],
+["aws","IAM group","Collection of users who need the same permissions"],
+["aws","IAM role","Temporary credentials for access"],
+["aws","S3 bucket","Top-level S3 container that holds objects"],
+["aws","S3 Standard","Storage class for frequent access with fast reads and writes"],
+["aws","S3 Glacier","Cheap archive storage; retrieval takes minutes to hours"],
+["aws","S3 Versioning","Setting that lets deleted or overwritten objects be restored"],
+["aws","aws s3 mb","Makes (creates) a bucket"],
+["aws","aws s3 cp","Copies files to or from S3 (add --recursive for folders)"],
+["aws","aws s3 mv","Moves or renames files"],
+["aws","aws s3 ls","Lists buckets or bucket contents"],
+["data","Relational database","Stores data in tables of rows and columns, designed to reduce redundancy"],
+["data","Foreign key","Column that links to another table's primary key"],
+["data","NoSQL","Non-table databases: document, key-value, graph, wide-column"],
+["data","ROLLBACK","SQL command that undoes changes in a transaction not yet committed"],
+["data","Model registry","Version control for models; lets you go back to earlier working models"],
+["data","Endpoint","URL where a deployed model receives requests and returns predictions"],
+["data","API Gateway","Central entry point that manages, secures, and routes API traffic"],
+["eth","Right to explanation","You may understand what an automated/AI decision did with your data"],
+["eth","Human in the loop","Required human participation: operation, supervision, decision-making"],
+["eth","EU AI Act","World's first comprehensive AI law, built on a risk pyramid"],
+["eth","Unacceptable risk","Top of the EU AI Act pyramid: these AI uses are banned"],
+["eth","High risk","EU AI Act tier with strict rules and required human oversight"]
+];
+
+// Question design follows the ideas in "From Memorization to Creation" (Wang et al., KDD '26):
+// every item names its target Bloom level and knowledge unit, difficulty maps to real cognitive level,
+// a round never repeats a knowledge unit, and levels climb gradually instead of jumping.
+const LV=["Remember","Understand","Apply","Analyze","Evaluate","Create"];
+
+// Hand-written questions: [topic, question, correct, [wrong x3], why, Bloom level, knowledge unit]
+const SCEN=[
+// Privacy
+["priv","Which of these is a quasi-identifier?","ZIP code",["Diagnosis","Salary","Full legal name"],"ZIP code alone doesn't identify you but can when combined with age and gender. Diagnosis and salary are sensitive attributes; a full name is a direct identifier.","Understand","Quasi-identifier"],
+["priv","Which of these is a sensitive attribute?","A patient's diagnosis",["Their ZIP code","Their age","Their gender"],"Sensitive attributes are what must stay hidden. ZIP, age and gender are quasi-identifiers.","Understand","Sensitive attribute"],
+["priv","Names are replaced with random IDs, and a separate lookup table can link them back. Which technique is this?","Pseudonymization",["Suppression","Generalization","Synthetic data"],"Replacing identifiers with tokens that a key can reverse is pseudonymization.","Apply","Pseudonymization"],
+["priv","Exact ages are changed into ranges like 30–39. Which technique is this?","Generalization",["Masking","Suppression","Pseudonymization"],"Grouping values into broader categories is generalization.","Apply","Generalization"],
+["priv","A Social Security number is shown as ***-**-1234. Which technique is this?","Masking",["Suppression","Generalization","Minimization"],"Masking hides part of the value but keeps its format.","Apply","Masking"],
+["priv","A company collects customers' full birth dates and home addresses, but only needs to know whether they're over 18. Which principle does this break?","Data minimization",["T-closeness","Masking","Pseudonymization"],"Minimization means only collecting what the purpose needs. A yes/no age check would do.","Apply","Minimization"],
+["priv","A released dataset is 5-anonymous, but everyone in one group shares the same diagnosis. What's still wrong?","An attacker can still learn that diagnosis; the group lacks l-diversity",["Nothing, 5-anonymity fully protects it","The ZIP codes need masking; it lacks masking","It has too many rows; it lacks minimization"],"K-anonymity hides who you are in the group, but if every sensitive value is the same, the value leaks anyway (homogeneity attack). L-diversity fixes that.","Analyze","L-diversity"],
+["priv","A dataset removed names but kept ZIP code, birth date, and gender. Why is it still risky?","Those quasi-identifiers can be combined to re-identify people",["Removing names makes it fully anonymous","ZIP codes are sensitive attributes","Gender is a direct identifier"],"Combined quasi-identifiers can single people out even without names.","Analyze","Quasi-identifier"],
+["priv","Every group has 3 different diagnoses (so it's 3-diverse), but in one group all three are rare cancers that barely appear in the full data. Which property does that group fail?","T-closeness",["K-anonymity","L-diversity","Minimization"],"L-diversity only counts distinct values. T-closeness also checks that a group's mix of sensitive values looks like the whole dataset's.","Analyze","T-closeness"],
+["priv","A researcher studies how age affects loan approval. Which treatment of the Age column best balances privacy and usefulness?","Generalize ages into ranges (20–29, 30–39, …)",["Suppress the Age column entirely","Replace each age with a random token","Keep exact ages and only remove names"],"Ranges still show the age trend while making individuals harder to single out. Suppression or tokens destroy the trend; exact ages keep the risk.","Evaluate","Generalization"],
+// APIs & Auth
+["api","Which request would normally return status 201?","A POST that creates a new user",["A GET that lists users","A request for a page that doesn't exist","A DELETE that removes a user"],"201 Created is the normal response to a successful POST.","Understand","201"],
+["api","Which of these is authorization rather than authentication?","Checking whether a logged-in user may delete a post",["Typing in a password","Scanning a fingerprint","Entering a 2FA code"],"The other three prove who you are. Deciding what you may do is authorization.","Understand","Authorization"],
+["api","You need to change only a user's email address, not the whole record. Which method fits best?","PATCH",["PUT","POST","GET"],"PATCH partially updates. PUT replaces the whole resource.","Apply","PATCH"],
+["api","A client sends a complete updated profile that should overwrite every field on the server. Which method fits best?","PUT",["PATCH","POST","GET"],"PUT replaces the whole resource. PATCH is for partial updates.","Apply","PUT"],
+["api","A fitness app wants your Google calendar without ever seeing your Google password. What makes this possible?","OAuth 2.0",["Suppression","HTTPS","Principle of least privilege"],"OAuth 2.0 gives the app a scoped access token instead of your credentials.","Apply","OAuth 2.0"],
+["api","A request returns 401. The user logs in, retries, and now gets 403. What changed?","They're authenticated now, but still not authorized for that resource",["The resource was deleted","The server went down","They're authorized now, but not authenticated"],"401 means the server doesn't know who you are. 403 means it knows, and the answer is still no.","Analyze","403"],
+["api","A contractor still has admin access six months after their project ended. What went wrong?","Least privilege wasn't followed; access should have been minimal and temporary",["They should have been added to a bigger IAM group","The API wasn't using HTTPS","Their bearer token was too short"],"They kept more access, for longer, than the task needed. A temporary role with minimal permissions would have expired.","Analyze","Principle of least privilege"],
+["api","A bearer token is accidentally pushed to a public GitHub repo. What's the best immediate response?","Revoke it and issue a new one, since anyone holding it can use it",["Nothing, a token isn't a password","Switch the API from HTTPS to HTTP","Make the repo private and keep the token"],"A bearer token grants access to whoever holds it, so it must be revoked. Hiding the repo doesn't undo the exposure.","Evaluate","Bearer token"],
+// Version control
+["git","Which of these commands changes the files in your working folder?","git pull",["git fetch","git status","git push"],"Pull merges remote changes into your files. Fetch only downloads, status only reports, push only uploads.","Understand","git pull"],
+["git","You want to see what teammates pushed without changing your working files. Which command?","git fetch",["git pull","git clone","git push"],"Fetch downloads commits without merging them.","Apply","git fetch"],
+["git","You edited three files but want only one in your next commit. Which command comes first?","git add (on that one file)",["git commit","git push","git status"],"Add stages that file; commit then saves only what's staged.","Apply","git add"],
+["git","You want teammates to review your feature branch before it goes into main. What do you open?","A pull request",["A clone","A fetch","A docstring"],"A pull request asks to merge your branch and allows review first.","Apply","Pull request"],
+["git","A teammate ran git pull and ended up with merge conflicts, but they only wanted to see what changed on the remote. What happened?","Pull fetched and merged; they should have used git fetch",["Clone overwrote their files","Push uploaded the conflicts","Status tried to merge their branch"],"Pull = fetch + merge. Fetch alone would have shown the changes without touching their work.","Analyze","git pull"],
+["git","You want to try a risky feature without breaking the version everyone uses. What's the best approach?","Create a branch, then open a pull request when it's ready",["Commit straight to main and fix it later","Clone the repo again and email the files","Use git fetch to test it"],"A branch isolates the work, and the pull request gets it reviewed before it reaches main.","Evaluate","Branch"],
+// Licenses & docs
+["lic","Which of these is an example of permissive-license use?","Using MIT-licensed code inside a closed-source app",["Modifying MATLAB's code without the vendor's permission","Keeping changes to GPL code secret while distributing it","Removing the license text from Apache code"],"Permissive licenses like MIT allow closed-source use. The others break license terms.","Understand","Permissive license"],
+["lic","You modify a GPL library and distribute your app. What must you do?","Release your changes under the same license",["Nothing, GPL is permissive","Pay the vendor","Remove the author's name"],"GPL is copyleft: distributed modifications keep the same license.","Apply","Copyleft"],
+["lic","Your company wants to sell a closed-source product that includes a modified GPL library. What's the problem?","Copyleft requires releasing those modifications under the GPL",["GPL code can't be modified at all","GPL is proprietary, so it needs a vendor license","There's no problem; GPL is permissive"],"Distributing modified GPL code means sharing those changes under the GPL, which conflicts with keeping it closed.","Analyze","Copyleft"],
+["lic","A company wants a license for its library that allows closed-source use AND protects users with an explicit patent grant. Which fits best?","Apache 2.0",["MIT","GPL","A proprietary license"],"Apache 2.0 is permissive and adds an explicit patent grant. MIT has no explicit patent grant; GPL is copyleft.","Evaluate","Apache 2.0"],
+["lic","A new teammate can't figure out what your project does or how to run it. Which file should you improve first?","README",["config/","src/","The license file"],"The README explains what the project is, why, and how to install and use it.","Apply","README"],
+// AWS
+["aws","Which of these is the customer's job under the shared responsibility model?","Setting who can access an S3 bucket",["Guarding data center doors","Replacing failed hard drives","Cooling the server rooms"],"Access settings are security IN the cloud. The rest is AWS's physical infrastructure.","Understand","Security IN the cloud"],
+["aws","Which of these is an example of serverless computing?","A Lambda function that runs when a file is uploaded",["An EC2 instance you patch yourself","A laptop running Jupyter","A server in your office closet"],"Serverless means the provider runs and scales the servers; you only supply code.","Understand","Serverless"],
+["aws","Which S3 storage class is cheapest for data you rarely need?","Glacier",["Standard","EC2","Lambda"],"Glacier is cheap archive storage with slower retrieval.","Understand","S3 Glacier"],
+["aws","Run a short piece of code every time a file lands in S3, with no servers to manage. Which service?","Lambda",["EC2","SageMaker","Glacier"],"Lambda runs short, event-triggered functions serverlessly.","Apply","Lambda"],
+["aws","You need full control over the operating system and instance type. Which service?","EC2",["Lambda","Fargate","SageMaker"],"EC2 gives you virtual servers you configure and manage.","Apply","EC2"],
+["aws","A contractor needs access for one afternoon. What should you use?","An IAM role",["An IAM user","An IAM group","An S3 bucket"],"Roles give temporary credentials.","Apply","IAM role"],
+["aws","Which command uploads a whole local folder to S3?","aws s3 cp --recursive",["aws s3 mb","aws s3 ls","aws s3 rm"],"cp copies; --recursive includes everything in the folder.","Apply","aws s3 cp"],
+["aws","A customer data file leaked because an S3 bucket was set to public. Under shared responsibility, whose failure is it?","The customer's: access settings are security IN the cloud",["AWS's: they own the hardware","Nobody's: S3 is public by default","The internet provider's"],"AWS secures the infrastructure; configuring who can read your bucket is on you.","Analyze","Security IN the cloud"],
+["aws","Someone deleted an important file from S3. When can you get it back?","Only if Versioning was turned on",["Always, with ROLLBACK","Never","Only within 12 hours"],"S3 deletes are recoverable only with Versioning enabled. ROLLBACK is a SQL transaction command.","Analyze","S3 Versioning"],
+["aws","You must keep 7 years of audit logs that you'll almost never read. What's the best choice?","S3 Glacier, because it's cheapest for rarely accessed data",["S3 Standard, for the fastest reads","An EC2 instance's disk","Store them inside a Lambda function"],"Rare access plus long retention is exactly Glacier's use case; paying for Standard's speed wastes money.","Evaluate","S3 Glacier"],
+["aws","A cleanup job runs for 2 minutes each night. What's the best reason to use Lambda instead of EC2?","You pay only while it runs and don't manage a server",["Lambda gives more control over the OS","S3 requires Lambda","EC2 can't run on a schedule"],"An always-on EC2 instance would sit idle 23+ hours a day. Lambda fits short, occasional work.","Evaluate","Lambda"],
+// SQL & deploy
+["data","Which of these is a NoSQL-style design?","Storing each user as a JSON document with its own fields",["Customers and orders tables joined by keys","A SQL JOIN between two tables","A table with a fixed set of columns"],"Document stores (JSON) are a NoSQL model with flexible fields.","Understand","NoSQL"],
+["data","How should an orders table connect to a customers table?","A foreign key in orders that points to the customers' primary key",["A shared S3 bucket","Copy the customer's details into every order","A folder hierarchy"],"Foreign keys reference primary keys in another table.","Apply","Foreign key"],
+["data","You deployed a bad model and need the previous version back. What helps?","The model registry",["API Gateway","The endpoint URL","S3 Glacier"],"The registry versions models so you can roll back.","Apply","Model registry"],
+["data","An orders table repeats the customer's full address on every row. What design change fixes this?","Move customers into their own table and link orders with a foreign key",["Store the table in S3 Glacier","Add more address columns","Use PATCH instead of PUT"],"Relational design reduces redundancy by storing each fact once and linking with keys.","Analyze","Relational database"],
+["data","Apps call your model endpoint directly with no authentication, and a traffic spike crashes it. What would have helped most?","An API Gateway in front of the endpoint",["A model registry","A longer README","S3 Glacier storage"],"API Gateway secures, throttles and manages traffic before it reaches the model.","Analyze","API Gateway"],
+["data","You're storing user profiles where each user has different optional fields. Which fits better, and why?","A NoSQL document store, because each record can have its own fields",["A relational table, because every row must have the same columns","S3 Glacier, because profiles are rarely read","A model registry, because it versions data"],"Flexible, varying fields fit a document model. A fixed relational schema would need many empty columns.","Evaluate","NoSQL"],
+// AI ethics
+["eth","A chatbot must tell users they're talking to an AI. Which EU AI Act tier is that?","Limited risk",["Unacceptable risk","High risk","Minimal risk"],"Limited risk means transparency duties, like disclosing a chatbot.","Understand","EU AI Act"],
+["eth","A government system that scores citizens' social behavior falls into which EU AI Act tier?","Unacceptable risk",["High risk","Limited risk","Minimal risk"],"Social scoring is banned: unacceptable risk, the top of the pyramid.","Apply","Unacceptable risk"],
+["eth","A loan was denied by an algorithm, and you want to know why. Which idea supports you?","Right to explanation",["Human in the loop","Least privilege","Shared responsibility"],"The right to explanation lets you understand automated decisions made about you.","Apply","Right to explanation"],
+["eth","A company uses AI to screen job applicants' résumés. What does the EU AI Act require?","It's high risk: strict rules and human oversight",["It's banned outright","Only a chatbot disclosure","Nothing, it's minimal risk"],"Hiring decisions affect people's lives, so screening tools fall in the high-risk tier.","Analyze","High risk"],
+["eth","A hospital AI flags patients who may need extra care. Which design best keeps a human in the loop?","A clinician reviews each flag and can override it before anything happens",["The AI acts automatically; humans check monthly stats","Patients are told the AI's decision is final","The AI hides its reasoning to avoid confusion"],"Human in the loop means a person oversees and can change each decision, and stays accountable.","Evaluate","Human in the loop"]
+];
+
+// Spot the error (Bloom: Understand, interpreting a claim): [topic, statement, isCorrect, explanation, knowledge unit]
+const SPOT=[
+["api","Get, Post, Put, and Patch are Git commands.",false,"They are HTTP methods used by APIs. Git commands are add, commit, push, pull, etc.","GET"],
+["api","Status code 404 means Bad Request.",false,"404 is Not Found. Bad Request is 400.","404"],
+["api","Status code 201 means a resource was created.",true,"Correct. It's the usual response to a successful POST.","201"],
+["api","In OAuth 2.0 the resource owner gives the client an Authentication Grant.",false,"It's an Authorization Grant. OAuth is about authorization, not authentication.","OAuth 2.0"],
+["api","A bearer token lets you prove who you are without sending your credentials every request.",true,"Correct. Whoever holds (bears) the token gets access.","Bearer token"],
+["priv","K-anonymity means each record matches at least k other records.",false,"At least k−1 others, so each group has at least k people total.","K-anonymity"],
+["priv","L-diversity makes each group contain at least l different sensitive values.",true,"Correct. It stops the homogeneity attack.","L-diversity"],
+["priv","Pseudonymized data is fully anonymous.",false,"It can be reversed with the key, so it is not full anonymization.","Pseudonymization"],
+["priv","A quasi-identifier is information that identifies you on its own.",false,"It only identifies you when combined with other info (ZIP + age + gender).","Quasi-identifier"],
+["git","Git is a centralized version control system, like SVN.",false,"Git is distributed. SVN is centralized.","Git"],
+["git","git pull is basically git fetch followed by a merge.",true,"Correct.","git pull"],
+["git","git fetch downloads new commits without merging them.",true,"Correct. That's why it's the safe option.","git fetch"],
+["git","git clone copies a remote repository into your existing local repository.",false,"Clone creates a brand-new local repository on your machine.","git clone"],
+["lic","Copyleft licenses let you keep your modifications closed-source.",false,"That's permissive. Copyleft requires distributed modifications to keep the same license.","Copyleft"],
+["lic","Apache 2.0 includes an explicit patent grant.",true,"Correct.","Apache 2.0"],
+["lic","A README is a “plane” text file.",false,"Plain text (usually Markdown).","README"],
+["aws","The customer is responsible for security OF the cloud.",false,"Swapped. The customer handles security IN the cloud; AWS handles OF.","Security OF the cloud"],
+["aws","IAM roles provide temporary credentials.",true,"Correct.","IAM role"],
+["aws","Any S3 deletion can be rolled back.",false,"Only if Versioning is enabled.","S3 Versioning"],
+["aws","Glacier is cheaper than Standard, but retrieval can take hours.",true,"Correct. Minutes to about 12 hours (Deep Archive up to 48).","S3 Glacier"],
+["aws","SageMaker notebooks are Jupyter notebooks.",true,"Correct (your notes spelled it “Jupiter”).","SageMaker"],
+["aws","AWS S3 commands start with “aws S3” in capitals.",false,"They're lowercase: aws s3 mb, aws s3 cp, …","aws s3 mb"],
+["data","In a relational database, data is stored with redundancy.",false,"Relational DBs are designed to reduce redundancy (normalization).","Relational database"],
+["data","SQL databases organize data in a hierarchical system.",false,"They use tables of rows and columns. Hierarchical/document structure is a NoSQL style.","NoSQL"],
+["data","Relational tables connect by linking foreign keys to primary keys.",true,"Correct.","Foreign key"],
+["eth","The EU AI Act requires human intervention for every AI system.",false,"Human oversight is required for high-risk systems, not all AI.","EU AI Act"],
+["eth","The EU AI Act's risk pyramid has the highest risk at the top.",true,"Correct. Unacceptable risk (banned) sits at the top.","Unacceptable risk"]
+];
+
+// Short answer: [topic, Bloom level, question, keyword groups (any word in a group counts), groups needed for full credit, model answer, labels for each group, knowledge unit]
+const SA=[
+["api","Understand","In your own words, what's the difference between authentication and authorization?",
+ [["who","identity","identif","verif","log in","login","prove","credential"],["allowed","permission","access","can do","privilege","rights","what they","what you"]],2,
+ "Authentication checks who you are (your identity). Authorization checks what you're allowed to do (your permissions).",["Authentication = who you are","Authorization = what you're allowed to do"],"Authentication"],
+["api","Understand","What's the difference between PUT and PATCH?",
+ [["replace","whole","entire","full","complete"],["partial","part","some field","specific","certain field","only change","only update"]],2,
+ "PUT replaces the whole resource. PATCH updates only part of it.",["PUT replaces the whole thing","PATCH changes part of it"],"PUT"],
+["git","Understand","What's the difference between git fetch and git pull?",
+ [["merg","combin","integrat","apply the change","updat"],["download","retriev","without merg","doesn't merge","does not merge","not merge","no merge","just look","safe","only get"]],2,
+ "Fetch downloads new commits without merging them. Pull fetches and then merges them into your branch (pull = fetch + merge).",["Pull merges","Fetch downloads without merging"],"git fetch"],
+["git","Understand","What does git add do?",
+ [["stag"],["next commit","commit","snapshot","save later","be saved"]],1,
+ "It stages your changes so they're included in the next commit.",["Stages changes","For the next commit"],"git add"],
+["priv","Understand","Explain k-anonymity in a sentence or two.",
+ [["k-1","k 1","at least k","k other","k people","k records","group","blend","indisting","same as","look the same","match"],["quasi","zip","age","gender","identif"]],2,
+ "Each record matches at least k−1 others on its quasi-identifiers (like ZIP + age + gender), so every person hides in a group of at least k.",["Blends into a group of at least k","Based on quasi-identifiers"],"K-anonymity"],
+["priv","Understand","Why is pseudonymized data not fully anonymous?",
+ [["revers","key","link back","linked back","re-identif","reidentif","lookup","look up","map back","undo","trace back","connect back","match back"]],1,
+ "The pseudonyms can be reversed with a separate key or lookup table, so people can be re-identified.",["It can be reversed / linked back with a key"],"Pseudonymization"],
+["priv","Remember","Name two anonymization techniques.",
+ [["suppress","remov","delet"],["mask","blur","hide part"],["pseudonym","token"],["generaliz","generalis","range","group"],["synthetic","fake"]],2,
+ "Any two of: suppression (remove it), masking (***-**-1234), pseudonymization (swap for a token), generalization (age → 30–39), synthetic data.",["Suppression","Masking","Pseudonymization","Generalization","Synthetic data"],"Suppression"],
+["api","Understand","What problem does OAuth 2.0 solve when a third-party app wants access to your account?",
+ [["password","credential","login info","log in info"],["token","scope","permission","limited access","on your behalf","behalf"]],2,
+ "The app gets a scoped access token instead of your password, so it can act on your behalf without seeing your credentials.",["No sharing your password","Uses a scoped token / permission"],"OAuth 2.0"],
+["lic","Understand","What's the key difference between copyleft and permissive licenses?",
+ [["same license","same terms","same rights","share alike","must release","must share","must be open","must stay open","stay open","keep it open","remain open","gpl","release the source","open source","open-source"],["closed","proprietary","don't have to","do not have to","not required","no requirement","any license","doesn't require","does not require","not have to"]],2,
+ "Copyleft requires distributed modifications to use the same license (stay open). Permissive licenses let you keep modifications closed.",["Copyleft: changes must keep the license","Permissive: changes can be closed"],"Permissive license"],
+["aws","Understand","In the shared responsibility model, what is AWS responsible for, and what is the customer responsible for?",
+ [["of the cloud","hardware","data center","datacenter","physical","infrastructure","facilit"],["in the cloud","your data","their data","customer data","access","iam","configur","setting","permission","application","encrypt","password"]],2,
+ "AWS secures the cloud itself (hardware, data centers). The customer secures what they put in it (data, access, configuration).",["AWS: security OF the cloud","Customer: security IN the cloud"],"Security OF the cloud"],
+["data","Understand","How do tables in a relational database link to each other?",
+ [["foreign"],["primary"]],2,
+ "A foreign key in one table references the primary key of another table.",["Foreign key","Primary key"],"Foreign key"],
+["data","Understand","What is a model endpoint in deployment?",
+ [["url","address","api","http","request","link"],["predict","inference","result","response","output","answer"]],2,
+ "A URL where the deployed model receives requests (data) and sends back predictions.",["A URL / API that receives requests","Returns predictions"],"Endpoint"],
+["eth","Understand","How does the EU AI Act decide how strictly to regulate an AI system?",
+ [["risk"],["tier","level","pyramid","categor","unacceptable","high","limited","minimal","ban"]],1,
+ "By risk level: unacceptable (banned), high (strict rules + human oversight), limited (transparency), minimal (no rules).",["Based on risk","Risk tiers / pyramid"],"EU AI Act"],
+["api","Apply","What does the principle of least privilege mean, and why does it matter?",
+ [["minimum","least","only what","only the","necessary","need","smallest","minimal"],["risk","damage","security","breach","attack","limit","safe","expos","harm","misuse","mistake"]],2,
+ "Give each user or client only the minimum access they need. It limits the damage if an account is misused or compromised.",["Only the minimum access needed","Limits risk/damage"],"Principle of least privilege"],
+["priv","Analyze","Why isn't k-anonymity enough on its own, and what does l-diversity add?",
+ [["same sensitive","same diagnosis","same value","homogen","all have","identical","one value","reveal","leak","still learn","still know","figure out"],["different","divers","multiple","varied","at least l","variety","several"]],2,
+ "If everyone in a group shares the same sensitive value, an attacker still learns it (homogeneity attack). L-diversity requires at least l different sensitive values in each group.",["The sensitive value can still leak","L-diversity requires different sensitive values"],"L-diversity"],
+["aws","Evaluate","When would you pick Lambda over EC2? Give a reason.",
+ [["short","event","trigger","small","occasional","infrequent","serverless","no server","without managing","don't want to manage","not manage","pay per","quick"]],1,
+ "For short, event-triggered code where you don't want to manage servers. EC2 is for when you need full control or long-running workloads.",["Short / event-driven / no servers to manage"],"Lambda"],
+["aws","Evaluate","Why would you choose S3 Glacier over S3 Standard?",
+ [["cheap","cost","less expensive","price","save money","lower"],["archiv","rare","infrequent","long-term","long term","backup","not often","seldom","don't need","dont need","old"]],2,
+ "It's much cheaper for data you rarely need (archives), at the cost of slower retrieval.",["Cheaper","For rarely accessed / archive data"],"S3 Glacier"],
+["git","Evaluate","Would you choose Git or Subversion for a team that often works offline? Why?",
+ [["git"],["distribut","offline","local","full history","whole history","own copy","clone","without a server","without the server","no server","no connection"]],2,
+ "Git. It's distributed, so every clone has the full history and you can commit offline. SVN needs the central server.",["Chooses Git","Because it's distributed / works locally"],"Git"],
+["eth","Evaluate","Why should a human stay in the loop for high-stakes AI decisions?",
+ [["mistake","error","catch","accura","wrong","check","oversight","review","verify"],["accountab","responsib","blame","transparen","explain","trust","ethic","fair","bias"]],1,
+ "Humans catch mistakes the AI makes, keep decisions transparent, and stay accountable for the outcome.",["Catch mistakes / oversight","Accountability / transparency"],"Human in the loop"],
+["aws","Create","Design access for an intern who needs to read one S3 bucket for three months. Use two ideas from your notes.",
+ [["least privilege","minimum","minimal","read-only","read only","only read","one bucket","that bucket","just the bucket","only the bucket","limited"],["role","temporar","expire","three months","3 months","time limit","revoke","remove access","end date"]],2,
+ "Give read-only access to just that bucket (least privilege) through a temporary IAM role that expires or is revoked after three months.",["Minimal access: read-only, one bucket","Temporary: IAM role / expires"],"IAM role"],
+["priv","Create","A dataset has Name, ZIP, Age, and Diagnosis columns. Describe how you'd prepare it for sharing.",
+ [["remove name","drop name","delete name","remove the name","drop the name","suppress","pseudonym","no name","take out"],["generaliz","range","bucket","first three","first 3","truncat","mask","group"],["k-anon","k anon","l-divers","l divers","blend","at least k","divers","same diagnosis"]],2,
+ "Suppress or pseudonymize names, generalize ZIP and Age (ranges, shorter ZIPs), then check each group is k-anonymous and l-diverse so diagnoses don't leak.",["Remove/pseudonymize names","Generalize ZIP and Age","Check k-anonymity / l-diversity"],"Generalization"],
+["data","Create","Outline the steps to deploy a trained model so an app can use it.",
+ [["regist","version"],["endpoint","url","api"],["gateway","secur","auth","throttl","traffic"]],2,
+ "Register and version the model, deploy it to an endpoint (a URL that returns predictions), and put an API Gateway in front to secure and manage traffic.",["Register / version the model","Deploy to an endpoint","Secure it with API Gateway"],"Model registry"],
+["lic","Create","What sections would you put in a README for your project?",
+ [["what","purpose","descri","overview","about","why"],["install","setup","set up","requirement","depend","venv"],["quick start","quickstart","usage","how to use","how to run","example","run it"]],2,
+ "What the project is and why, installation/requirements (setup), and a quick start showing how to use it.",["What / why","Installation & requirements","Quick start / usage"],"README"]
+];
+
+// ---------- shared ----------
+const $=s=>document.querySelector(s);
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let mode="trail", topic=store.get("s200-topic","all"), streak=0, best=store.get("s200-best",0);
+if(topic!=="all"&&!TOPICS[topic])topic="all";
+$("#best").textContent=best;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const inTopic=t=>topic==="all"||t===topic;
+const rand=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function bump(ok){
+  streak=ok?streak+1:0;
+  if(streak>best){best=streak;store.set("s200-best",best)}
+  $("#streak").textContent=streak;$("#best").textContent=best;
+}
+const DIFF={easy:{label:"Easy",pts:100},medium:{label:"Medium",pts:200},hard:{label:"Hard",pts:300},mystery:{label:"Mystery",pts:0}};
+const icon=(d,cls="")=>`<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-${d}"/></svg>`;
+$("#legend").innerHTML=[["easy","Easy · 100 pts · recall (Remember)"],["medium","Medium · 200 pts · explain & classify (Understand)"],["hard","Hard · 300 pts · Apply → Analyze → Evaluate → Create, climbing as the round goes on"],["mystery","Mystery · random difficulty, double points"],["sa","✎ Some Medium and Hard stops are short answer: graded on key ideas, half credit for partial answers"]]
+  .map(([d,t])=>d==="sa"?`<span class="sa-note">${t}</span>`:`<span><span class="ico-dot ${d}">${icon(d)}</span>${t}</span>`).join("");
+
+// ---------- svg helpers ----------
+const NS="http://www.w3.org/2000/svg";
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+const W={world:$("#world"),paths:$("#paths"),scenery:$("#scenery"),markers:$("#markers"),fx:$("#fx")};
+
+// scenery pieces (drawn with the base at 0,0)
+const DRAW={
+  tree(g,s){el("ellipse",{cx:0,cy:2,rx:24*s,ry:7*s,class:"shd"},g);el("rect",{x:-4*s,y:-20*s,width:8*s,height:22*s,rx:2,class:"trunk"},g);
+    el("circle",{cx:0,cy:-38*s,r:23*s,class:"tree"},g);el("circle",{cx:-8*s,cy:-45*s,r:11*s,class:"tree2"},g)},
+  pine(g,s){el("ellipse",{cx:0,cy:2,rx:20*s,ry:6*s,class:"shd"},g);el("rect",{x:-3.5*s,y:-14*s,width:7*s,height:16*s,class:"trunk"},g);
+    el("path",{d:`M0 ${-54*s}L${27*s} ${-10*s}H${-27*s}Z`,class:"pine"},g);el("path",{d:`M0 ${-74*s}L${21*s} ${-34*s}H${-21*s}Z`,class:"pine"},g)},
+  bush(g,s){el("ellipse",{cx:0,cy:2,rx:22*s,ry:6*s,class:"shd"},g);[[-10,-9,11],[9,-10,12],[0,-17,11]].forEach(([x,y,r])=>el("circle",{cx:x*s,cy:y*s,r:r*s,class:"bush"},g))},
+  rock(g,s){el("ellipse",{cx:0,cy:-6*s,rx:16*s,ry:11*s,class:"rock"},g);el("ellipse",{cx:-5*s,cy:-10*s,rx:7*s,ry:3.5*s,class:"rock2"},g)},
+  flowers(g,s){const c=pick(["f1","f2","f3"]);[[0,0],[9,-5],[-8,-4],[3,-11]].forEach(([x,y])=>{el("circle",{cx:x*s,cy:y*s,r:3.6*s,class:c},g);el("circle",{cx:x*s,cy:y*s,r:1.4*s,class:"fc"},g)})},
+  tuft(g,s){el("path",{d:`M-6 0l-3-10M0 0v-12M6 0l3-10`,class:"tuft",transform:`scale(${s})`},g)}
+};
+const KINDS=[["tree",.3],["pine",.2],["bush",.18],["rock",.12],["flowers",.12],["tuft",.08]];
+function kind(){let r=Math.random();for(const [k,w] of KINDS){if((r-=w)<0)return k}return "tuft"}
+function addScenery(x,y,k,s){
+  const g=el("g",{transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`,"data-y":y});
+  DRAW[k](g,s);
+  // keep depth order: lower on screen draws on top
+  const kids=[...W.scenery.children];const after=kids.find(c=>+c.dataset.y>y);
+  W.scenery.insertBefore(g,after||null);
+}
+function scatter(cx,y0,y1,avoid,count){
+  let placed=0,tries=0;
+  while(placed<count&&tries<count*12){
+    tries++;
+    const x=cx+rand(-640,640),y=rand(y0,y1),k=kind(),s=k==="tuft"||k==="flowers"?rand(.9,1.3):rand(.8,1.35);
+    const pad=(k==="tree"||k==="pine")?62:46;
+    if(avoid.some(([px,py])=>Math.hypot(px-x,py-y)<pad))continue;
+    addScenery(x,y,k,s);placed++;
+  }
+}
+function samples(path,step=18){const L=path.getTotalLength(),out=[];for(let s=0;s<=L;s+=step){const p=path.getPointAtLength(s);out.push([p.x,p.y])}return out}
+
+// ---------- hero ----------
+const heroFlip=$("#heroFlip"),heroBody=$("#heroBody"),legL=$("#legL"),legR=$("#legR");
+function face(dir){heroFlip.setAttribute("transform",`scale(${dir} 1)`)}
+function bob(now,moving){
+  if(!moving||reduced){heroBody.removeAttribute("transform");legL.removeAttribute("transform");legR.removeAttribute("transform");return}
+  const ph=now/85,a=Math.sin(ph)*28;
+  heroBody.setAttribute("transform",`translate(0 ${(-Math.abs(Math.sin(ph))*4).toFixed(2)})`);
+  legL.setAttribute("transform",`rotate(${a.toFixed(1)} -4.5 -18)`);legR.setAttribute("transform",`rotate(${(-a).toFixed(1)} 4.5 -18)`);
+}
+function floatText(txt,color){
+  const t=el("text",{x:400,y:385,class:"float",style:`fill:${color}`},W.fx);t.textContent=txt;
+  const anim=t.animate?t.animate([{transform:"translateY(0)",opacity:1},{transform:"translateY(-50px)",opacity:0}],{duration:reduced?600:1300,easing:"ease-out"}):null;
+  setTimeout(()=>t.remove(),reduced?600:1300);
+}
+
+// ---------- trail round ----------
+let T={};
+function camera(){W.world.setAttribute("transform",`translate(${(400-T.hx).toFixed(2)} ${(460-T.hy).toFixed(2)})`)}
+function setPrompt(html){const p=$("#prompt");p.hidden=!html;if(html)p.innerHTML=html}
+function trailStart(){
+  cancelAnimationFrame(T.raf);
+  T={step:0,score:0,log:[],used:new Set(),units:new Set(),topics:{},hx:0,hy:0,busy:false,branches:[],cur:null,raf:0};
+  W.paths.innerHTML="";W.scenery.innerHTML="";W.markers.innerHTML="";W.fx.innerHTML="";
+  $("#summary").hidden=true;$("#sceneWrap").hidden=false;$("#legend").hidden=false;$("#enc").hidden=true;
+  face(1);bob(0,false);camera();
+  const g=el("g",{"data-y":0},W.paths);
+  el("path",{d:"M0 300L0 0",class:"edge"},g);el("path",{d:"M0 300L0 0",class:"dirt"},g);
+  scatter(0,-10,160,[[0,0],[0,60],[0,120],[0,160]],16);
+  renderHud();makeFork();
+}
+function renderHud(){
+  $("#stopN").textContent=Math.min(T.step+1,10);$("#scoreN").textContent=T.score.toLocaleString();
+  $("#dots").innerHTML=Array.from({length:10},(_,i)=>{
+    const l=T.log[i];
+    if(l)return `<li class="${l.credit===1?"ok":l.credit?"half":"no"} ${l.actual}" title="Stop ${i+1}: ${DIFF[l.actual].label}, ${l.credit===1?"correct":l.credit?"partial credit":"missed"}">${icon(l.actual)}</li>`;
+    return `<li class="${i===T.step?"now":""}" title="Stop ${i+1}"></li>`;
+  }).join("");
+}
+function makeFork(){
+  const n=Math.random()<.65?3:2, offs=n===3?[-230,0,230]:[-165,165], diffs=shuffle(Object.keys(DIFF)).slice(0,n);
+  const cx=T.hx,cy=T.hy;
+  const gP=el("g",{"data-y":cy},W.paths),gM=el("g",{"data-y":cy},W.markers);
+  const avoid=[];
+  T.branches=offs.map((dx,i)=>{
+    const ex=cx+dx+rand(-10,10),ey=cy-300+rand(-12,12);
+    const d=`M${cx} ${cy}C${cx} ${cy-140} ${ex} ${ey+170} ${ex} ${ey}`;
+    const bg=el("g",{class:"branch fresh"},gP);
+    el("path",{d,class:"edge"},bg);const dirt=el("path",{d,class:"dirt"},bg);const hit=el("path",{d,class:"hit"},bg);
+    const sx=ex+(dx>0?-50:50),sy=ey-6,dd=diffs[i];
+    const sg=el("g",{class:`sign fresh ${dd}`,transform:`translate(${sx.toFixed(1)} ${sy.toFixed(1)})`,role:"button",tabindex:"-1","aria-label":`${DIFF[dd].label} path`},gM);
+    el("rect",{x:-3,y:-26,width:6,height:28,rx:2,class:"post"},sg);
+    el("circle",{r:24,cy:-30,class:"badge"},sg);
+    const u=el("use",{href:"#i-"+dd,x:-13,y:-43,width:26,height:26,class:"ico"},sg);
+    const lbl=el("text",{y:-62,"text-anchor":"middle",class:"slabel"},sg);
+    lbl.textContent=dd==="mystery"?"???":`${DIFF[dd].label.toUpperCase()} ${DIFF[dd].pts}`;
+    const b={ex,ey,diff:dd,bg,sg,dirt,u,lbl};
+    const on=()=>{bg.classList.add("hover");sg.classList.add("hover")},off=()=>{bg.classList.remove("hover");sg.classList.remove("hover")};
+    [hit,sg].forEach(x=>{x.addEventListener("click",()=>choose(b));x.addEventListener("pointerenter",on);x.addEventListener("pointerleave",off)});
+    avoid.push(...samples(dirt),[sx,sy-30],[sx,sy-60]);
+    return b;
+  });
+  scatter(cx,cy-440,cy-30,avoid,22);
+  // drop things far behind the hiker
+  [W.paths,W.markers,W.scenery].forEach(layer=>[...layer.children].forEach(c=>{if(+c.dataset.y>cy+700)c.remove()}));
+  T.busy=false;
+  const keys=n===3?"<kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd>":"<kbd>←</kbd><kbd>→</kbd>";
+  setPrompt(`Stop ${T.step+1} of 10 · choose a path ${keys}`);
+  renderHud();
+}
+function choose(b){
+  if(T.busy)return;T.busy=true;setPrompt("");
+  T.branches.forEach(o=>{o.bg.classList.remove("hover","fresh");o.sg.classList.remove("hover","fresh");if(o!==b){o.bg.classList.add("dim");o.sg.classList.add("dim")}});
+  const path=b.dirt,len=path.getTotalLength(),dur=reduced?250:1500,t0=performance.now();let px=T.hx;
+  const frame=now=>{
+    const k=Math.min(1,(now-t0)/dur),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2,p=path.getPointAtLength(len*e);
+    if(Math.abs(p.x-px)>.4)face(p.x>px?1:-1);px=p.x;T.hx=p.x;T.hy=p.y;camera();bob(now,k<1);
+    if(k<1)T.raf=requestAnimationFrame(frame);else arrive(b);
+  };
+  T.raf=requestAnimationFrame(frame);
+}
+function arrive(b){
+  let actual=b.diff,mystery=false;
+  if(b.diff==="mystery"){
+    mystery=true;actual=pick(["easy","medium","hard"]);
+    b.sg.classList.remove("mystery");b.sg.classList.add(actual,"reveal");b.u.setAttribute("href","#i-"+actual);
+    b.lbl.textContent=`${DIFF[actual].label.toUpperCase()} ×2`;
+    floatText(`Mystery: ${DIFF[actual].label}!`,"var(--myst)");
+  }
+  const pts=DIFF[actual].pts*(mystery?2:1);
+  setTimeout(()=>showEnc({q:buildQ(actual),actual,mystery,pts}),mystery?(reduced?300:1000):250);
+}
+function buildQ(diff){
+  // Knowledge units never repeat within a round; with "All topics" the round spreads across topics;
+  // Hard stops climb one Bloom level at a time (Apply → Analyze → Evaluate → Create) as the round goes on.
+  const ok=x=>inTopic(x[0]), fresh=u=>!T.units.has(u);
+  const tcount=t=>topic==="all"?(T.topics[t]||0):0;
+  const mc=(s,lvl)=>({t:s[0],bloom:lvl,q:s[1],a:s[2],opts:shuffle([s[2],...s[3]]),why:s[4],unit:s[6]});
+  const tf=s=>({t:s[0],bloom:"Understand",q:s[1],note:true,pre:"Is this line from the notes correct?",a:s[2]?"Correct as written":"Has an error",opts:["Correct as written","Has an error"],why:s[3],unit:s[4]});
+  const sa=s=>({sa:true,t:s[0],bloom:s[1],q:s[2],groups:s[3],need:s[4],a:s[5],model:s[5],labels:s[6],unit:s[7]});
+  const choose=cands=>{
+    if(!cands.length)return null;
+    let best=Infinity,top=[];
+    cands.forEach(c=>{const sc=c.score+Math.random()*.9;if(sc<best-1e-9){best=sc;top=[c]}else if(Math.abs(sc-best)<.5)top.push(c)});
+    return pick(top).make();
+  };
+  let q=null;
+  if(diff==="hard"){
+    const target=2+Math.round(T.step*3/9);            // 2=Apply … 5=Create
+    const cands=[
+      ...SCEN.filter(s=>ok(s)&&LV.indexOf(s[5])>=2&&fresh(s[6])).map(s=>({score:Math.abs(LV.indexOf(s[5])-target)+1.5*tcount(s[0]),make:()=>mc(s,s[5])})),
+      ...SA.filter(s=>ok(s)&&LV.indexOf(s[1])>=2&&fresh(s[7])).map(s=>({score:Math.abs(LV.indexOf(s[1])-target)+1.5*tcount(s[0])+.3,make:()=>sa(s)}))
+    ];
+    q=choose(cands);
+  }else if(diff==="medium"){
+    const r=Math.random(),kind=r<.35?"sa":r<.7?"spot":"scen";
+    const pools={
+      sa:SA.filter(s=>ok(s)&&LV.indexOf(s[1])<=1&&fresh(s[7])).map(s=>({score:1.5*tcount(s[0]),make:()=>sa(s)})),
+      spot:SPOT.filter(s=>ok(s)&&fresh(s[4])).map(s=>({score:1.5*tcount(s[0]),make:()=>tf(s)})),
+      scen:SCEN.filter(s=>ok(s)&&s[5]==="Understand"&&fresh(s[6])).map(s=>({score:1.5*tcount(s[0]),make:()=>mc(s,"Understand")}))
+    };
+    q=choose(pools[kind])||choose([...pools.sa,...pools.spot,...pools.scen]);
+  }
+  if(!q){
+    // Remember level: pick a term, answer from the definition or vice versa
+    let pool=CARDS.filter(c=>ok(c)&&fresh(c[1]));
+    if(!pool.length)pool=CARDS.filter(c=>fresh(c[1]));
+    if(!pool.length)pool=CARDS;
+    const minT=Math.min(...pool.map(c=>tcount(c[0])));pool=pool.filter(c=>tcount(c[0])===minT);
+    const c=pick(pool);
+    let dp=diff==="easy"?CARDS.filter(x=>x[0]!==c[0]):CARDS.filter(x=>x!==c&&x[0]===c[0]);
+    if(dp.length<3)dp=CARDS.filter(x=>x!==c);
+    const d=shuffle(dp).slice(0,3),why=`${c[1]}: ${c[2]}`;
+    q=Math.random()<.5
+      ?{t:c[0],bloom:"Remember",pre:"Which term matches?",q:c[2],a:c[1],opts:shuffle([c[1],...d.map(x=>x[1])]),why,unit:c[1]}
+      :{t:c[0],bloom:"Remember",pre:"What does this mean?",q:c[1],a:c[2],opts:shuffle([c[2],...d.map(x=>x[2])]),why,unit:c[1]};
+  }
+  T.units.add(q.unit);T.topics[q.t]=(T.topics[q.t]||0)+1;
+  return q;
+}
+
+// ---------- short-answer grading (lenient: key ideas, typos OK, any wording) ----------
+function normTxt(s){return " "+String(s).toLowerCase().replace(/[‘’`]/g,"'").replace(/[^a-z0-9+'\- ]+/g," ").replace(/\s+/g," ").trim()+" "}
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let p=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+function kwHit(text,toks,kw){
+  kw=normTxt(kw).trim();if(!kw)return false;
+  if(kw.includes(" "))return text.includes(kw);
+  return toks.some(t=>t.startsWith(kw)||(kw.length>=5&&t.length>=kw.length-1&&lev(t.slice(0,kw.length),kw)<=(kw.length>=8?2:1)));
+}
+function grade(ans,q){
+  const text=normTxt(ans),toks=text.trim().split(" ").filter(Boolean);
+  const hits=q.groups.map(g=>g.some(k=>kwHit(text,toks,k)));
+  const n=hits.filter(Boolean).length;
+  const level=n>=q.need?"full":(n>0&&n>=Math.ceil(q.need/2))?"partial":"miss";
+  return {hits,level};
+}
+const CREDIT={full:1,partial:.5,miss:0};
+const STATUS={full:["ok","200 OK"],partial:["half","206 Partial Content"],miss:["no","400 Bad Request"]};
+
+function showEnc(E){
+  T.cur=E;T.answered=false;const q=E.q;
+  const head=`<div class="meta"><span>Stop ${T.step+1} / 10 · ${TOPICS[q.t]} · Bloom: ${q.bloom}</span>
+    <span class="dpill ${E.actual}">${icon(E.actual)}${DIFF[E.actual].label}${E.mystery?" · mystery ×2":""} · ${E.pts} pts</span></div>`;
+  if(q.sa){
+    $("#encCard").innerHTML=`${head}<div class="tag">Short answer · a sentence or two · graded on key ideas, not exact wording</div>
+    <p class="q">${esc(q.q)}</p>
+    <label class="sr" for="sa">Your answer</label>
+    <textarea id="sa" rows="3" placeholder="Type your answer… (Enter to submit, Shift+Enter for a new line)"></textarea>
+    <div class="row" id="saBtns"><button class="btn" id="saGo">Submit answer</button><button class="btn ghost" id="saSkip">I'm not sure</button></div>
+    <div id="fb"></div>`;
+    $("#enc").hidden=false;
+    $("#saGo").onclick=()=>submitSA(false);$("#saSkip").onclick=()=>submitSA(true);
+    $("#sa").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();submitSA(false)}});
+    setTimeout(()=>$("#sa")?.focus({preventScroll:innerWidth<700}),60);
+  }else{
+    $("#encCard").innerHTML=`${head}
+    ${q.pre?`<div class="tag">${q.pre}</div>`:""}
+    ${q.note?`<div class="note">${esc(q.q)}</div>`:`<p class="q">${esc(q.q)}</p>`}
+    <div class="choices">${q.opts.map((o,i)=>`<button class="choice" id="c${i}" data-i="${i}"><span class="k">${i+1}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div id="fb"></div>`;
+    $("#enc").hidden=false;
+    $("#encCard").querySelectorAll(".choice").forEach(b=>b.onclick=()=>answer(+b.dataset.i));
+  }
+  if(innerWidth<700)$("#enc").scrollIntoView({block:"nearest",behavior:reduced?"auto":"smooth"});
+}
+function nextBtn(){return `<div class="row" style="margin-top:12px"><button class="btn" id="next">${T.step===9?"See round summary":"Keep walking"}</button></div>`}
+function answer(i){
+  if(T.answered)return;T.answered=true;
+  const E=T.cur,q=E.q,ok=q.opts[i]===q.a,got=ok?E.pts:0;
+  T.score+=got;floatText(ok?`+${got}`:"missed",ok?"var(--ok)":"var(--bad)");
+  bump(ok);T.log.push({...E,ok,credit:ok?1:0,got,pick:q.opts[i]});renderHud();
+  document.querySelectorAll("#encCard .choice").forEach((b,j)=>{b.disabled=true;if(q.opts[j]===q.a)b.classList.add("right");else if(j===i)b.classList.add("wrong")});
+  $("#fb").innerHTML=`<div class="feedback ${ok?"ok":"no"}"><span class="status">${ok?"200 OK":"400 Bad Request"}</span><p>${esc(q.why)}</p></div>${nextBtn()}`;
+  $("#next").onclick=next;$("#next").focus({preventScroll:true});
+}
+function submitSA(skip){
+  if(T.answered)return;
+  const E=T.cur,q=E.q,ans=skip?"":$("#sa").value.trim();
+  if(!skip&&!ans){$("#sa").focus();return}
+  T.answered=true;$("#sa").disabled=true;$("#saBtns").hidden=true;
+  const g=skip?{hits:q.groups.map(()=>false),level:"miss"}:grade(ans,q);
+  const got=Math.round(E.pts*CREDIT[g.level]);
+  T.score+=got;floatText(got?`+${got}`:"missed",g.level==="miss"?"var(--bad)":g.level==="partial"?"var(--amber)":"var(--ok)");
+  bump(g.level!=="miss");
+  const entry={...E,sa:true,ans,skip,g,level:g.level,credit:CREDIT[g.level],got,ok:g.level==="full",self:false};
+  T.log.push(entry);renderHud();renderSAFeedback(entry);
+}
+function keyList(q,hits,self){
+  // groups with many alternatives (like "name two techniques") only list what matters
+  return `<ul class="keys">${q.labels.map((l,i)=>`<li class="${hits[i]||self?"hit":"miss"}">${hits[i]?"✓":self?"✓":"–"} ${esc(l)}</li>`).join("")}</ul>`;
+}
+function renderSAFeedback(e){
+  const q=e.q,[cls,code]=STATUS[e.level];
+  const need=q.need<q.groups.length?`<div class="tag">Needed ${q.need} of these for full credit</div>`:"";
+  const msg=e.skip?"No answer given. Here's what I was looking for.":e.level==="full"?(e.self?"Counted as correct (self-graded).":"You hit the key ideas."):e.level==="partial"?"Partly there. Half credit.":"Didn't spot the key ideas.";
+  $("#fb").innerHTML=`<div class="feedback sa ${cls}"><span class="status">${code}</span><div><p><b>${msg}</b></p>
+    ${need}${keyList(q,e.g.hits,e.self)}<p class="model"><span class="tag">What I was looking for</span><br>${esc(q.model)}</p></div></div>
+  ${e.level!=="full"&&!e.skip?`<div class="row"><button class="btn ghost" id="override">My answer covered this. Count it.</button></div>`:""}
+  ${nextBtn()}`;
+  const ov=$("#override");
+  if(ov)ov.onclick=()=>{T.score+=e.pts-e.got;e.got=e.pts;e.level="full";e.credit=1;e.ok=true;e.self=true;
+    if(streak===0)bump(true);renderHud();floatText("counted","var(--ok)");renderSAFeedback(e)};
+  $("#next").onclick=next;$("#next").focus({preventScroll:true});
+}
+function next(){
+  $("#enc").hidden=true;T.step++;
+  if(T.step>=10)return summary();
+  makeFork();
+  if(innerWidth<700)$("#sceneWrap").scrollIntoView({block:"nearest",behavior:reduced?"auto":"smooth"});
+}
+const fmt=n=>Number.isInteger(n)?String(n):n.toFixed(1);
+function summary(){
+  renderHud();
+  const right=T.log.reduce((a,l)=>a+l.credit,0),key="s200-trail-"+topic,prev=store.get(key,0),rec=T.score>prev;
+  if(rec)store.set(key,T.score);
+  const code=right>=9?"200 OK":right>=7?"201 Created":right>=5?"206 Partial Content":"404 Knowledge Not Found";
+  const tile=(d,L)=>`<div class="${d}"><span class="ico-dot">${icon(d)}</span><span>${DIFF[d].label}<br><b>${fmt(L.reduce((a,l)=>a+l.credit,0))} / ${L.length}</b></span></div>`;
+  const rows=["easy","medium","hard"].map(d=>tile(d,T.log.filter(l=>l.actual===d))).join("")+tile("mystery",T.log.filter(l=>l.mystery));
+  const missed=T.log.filter(l=>!l.sa&&!l.ok), sas=T.log.filter(l=>l.sa);
+  const tag=l=>`<span class="dpill ${l.actual}">${icon(l.actual)}${DIFF[l.actual].label}${l.mystery?" · mystery":""} · ${TOPICS[l.q.t]} · ${l.q.bloom}</span>`;
+  $("#summary").innerHTML=`<div class="tag">Trail complete${topic!=="all"?` · ${TOPICS[topic]}`:""}</div>
+  <div class="sum-top"><h2>${T.score.toLocaleString()} pts</h2><div><div class="status" style="color:${right>=7?"var(--ok)":"var(--bad)"}">${code}</div>
+    <div>${fmt(right)} of 10 correct · ${rec?"new best score":`best ${Math.max(prev,T.score).toLocaleString()} pts`}</div></div></div>
+  <div class="breakdown">${rows}</div>
+  <div><div class="tag" style="margin-bottom:6px">By thinking level (Bloom)</div><div class="lvls">${LV.map(v=>{const L=T.log.filter(l=>l.q.bloom===v);return L.length?`<span class="lvl"><span>${v}</span><b>${fmt(L.reduce((a,l)=>a+l.credit,0))} / ${L.length}</b></span>`:""}).join("")}</div></div>
+  <div><div class="tag" style="margin-bottom:6px">Your path</div><ol class="dots path-recap">${T.log.map((l,i)=>`<li class="${STATUS[l.credit===1?"full":l.credit?"partial":"miss"][0]} ${l.actual}" title="Stop ${i+1}">${icon(l.actual)}</li>`).join("")}</ol></div>
+  ${sas.length?`<div class="tag">Short answers · what I was looking for (${sas.length})</div><ul class="missed">${sas.map(l=>{const [cls,c]=STATUS[l.level];return `<li class="${l.actual}">
+      ${tag(l)}<span class="q2">${esc(l.q.q)}</span>
+      <span class="yours">Your answer: ${l.skip?"<i>skipped</i>":"“"+esc(l.ans)+"”"} <b class="grade ${cls}">${c}${l.self?" · self-graded":""}</b></span>
+      ${keyList(l.q,l.g.hits,l.self)}
+      <span class="why"><b>Looking for:</b> ${esc(l.q.model)}</span></li>`}).join("")}</ul>`:""}
+  ${missed.length?`<div class="tag">Multiple-choice misses (${missed.length})</div><ul class="missed">${missed.map(l=>`<li class="${l.actual}">
+      ${tag(l)}<span class="q2">${l.q.note?"“"+esc(l.q.q)+"”":esc(l.q.q)}</span>
+      <span class="you">You picked: ${esc(l.pick)}</span><span class="ans">Answer: ${esc(l.q.a)}</span><span class="why">${esc(l.q.why)}</span></li>`).join("")}</ul>`
+    :(sas.length?"":`<p>Nothing missed. Perfect trail.</p>`)}
+  <div class="row"><button class="btn" id="again">Start a new trail</button></div>`;
+  $("#sceneWrap").hidden=true;$("#legend").hidden=true;$("#summary").hidden=false;
+  $("#again").onclick=trailStart;$("#summary").scrollIntoView({block:"start",behavior:reduced?"auto":"smooth"});
+}
+
+
+// ---------- topics & modes ----------
+function renderTopics(){
+  const el2=$("#topics");el2.innerHTML="";
+  [["all","All topics"],...Object.entries(TOPICS)].forEach(([k,v])=>{
+    const b=document.createElement("button");b.className="chip";b.id="t-"+k;b.textContent=v;
+    b.setAttribute("aria-pressed",String(k===topic));
+    b.onclick=()=>{topic=k;store.set("s200-topic",k);renderTopics();start()};
+    el2.appendChild(b);
+  });
+}
+document.querySelectorAll("nav.modes button").forEach(b=>b.onclick=()=>{
+  mode=b.dataset.mode;document.querySelectorAll("nav.modes button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));start();
+});
+
+let M={};
+// ---------- flashcards ----------
+let F={};
+function cardsStart(){F={deck:shuffle(CARDS.filter(c=>inTopic(c[0]))),known:0,total:0};F.total=F.deck.length;cardsRender()}
+function cardsRender(){
+  const s=$("#stage"),c=F.deck[0];
+  if(!c){s.innerHTML=`<div class="summary"><div class="tag">Deck cleared</div><h2>All ${F.total} cards sorted</h2><p>Every card landed in “Got it”. Switch topics or shuffle again.</p></div><div class="row"><button class="btn" id="again">Shuffle again</button></div>`;$("#again").onclick=cardsStart;return}
+  s.innerHTML=`<div class="meta"><span>${TOPICS[c[0]]}</span><span>${F.known} known · ${F.deck.length} left</span></div>
+  <div class="bar"><i style="width:${F.known/F.total*100}%"></i></div>
+  <div class="card" id="card" tabindex="0" role="button" aria-label="Flip card"><div class="inner">
+    <div class="face front"><div class="term">${esc(c[1])}</div><div class="hint">tap or press space to flip</div></div>
+    <div class="face back"><div class="tag">${esc(c[1])}</div><div class="def">${esc(c[2])}</div></div>
+  </div></div>
+  <div class="row"><button class="btn warn" id="again">Study again</button><button class="btn good" id="got">Got it</button></div>`;
+  const card=$("#card");card.onclick=()=>card.classList.toggle("flip");
+  $("#got").onclick=()=>{F.deck.shift();F.known++;cardsRender()};
+  $("#again").onclick=()=>{const x=F.deck.shift();F.deck.splice(Math.min(3,F.deck.length),0,x);cardsRender()};
+}
+
+// ---------- match ----------
+
+function matchStart(){
+  clearInterval(M.timer);
+  const set=shuffle(CARDS.filter(c=>inTopic(c[0]))).slice(0,6);
+  M={set,terms:shuffle(set),defs:shuffle(set),sel:null,done:0,miss:0,t0:Date.now(),timer:null};
+  const bestKey="s200-match-"+topic;
+  $("#stage").innerHTML=`<div class="meta"><span>Match each term to its meaning</span><span><span id="clock">0.0</span>s · misses <span id="miss">0</span> · best ${store.get(bestKey,null)?store.get(bestKey)+"s":"—"}</span></div>
+  <div class="match"><div class="col" id="terms"></div><div class="col" id="defs"></div></div>`;
+  M.terms.forEach((c,i)=>{const b=document.createElement("button");b.className="tile term";b.id="mt"+i;b.textContent=c[1];b.onclick=()=>{if(b.classList.contains("done"))return;document.querySelectorAll(".tile.term").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");M.sel={c,b}};$("#terms").appendChild(b)});
+  M.defs.forEach((c,i)=>{const b=document.createElement("button");b.className="tile";b.id="md"+i;b.textContent=c[2];b.onclick=()=>matchPick(c,b);$("#defs").appendChild(b)});
+  M.timer=setInterval(()=>{const el=$("#clock");if(el)el.textContent=((Date.now()-M.t0)/1000).toFixed(1)},100);
+}
+function matchPick(c,b){
+  if(!M.sel||b.classList.contains("done"))return;
+  if(M.sel.c===c){M.sel.b.classList.remove("sel");M.sel.b.classList.add("done");b.classList.add("done");M.sel=null;M.done++;bump(true);
+    if(M.done===M.set.length){clearInterval(M.timer);const t=+((Date.now()-M.t0)/1000).toFixed(1),k="s200-match-"+topic,prev=store.get(k,null),rec=prev==null||t<prev;if(rec)store.set(k,t);
+      const s=$("#stage");const d=document.createElement("div");d.className="feedback ok";d.innerHTML=`<span class="status">200 OK</span><p>All matched in ${t}s with ${M.miss} miss${M.miss===1?"":"es"}.${rec?" New best time.":""}</p>`;s.appendChild(d);
+      const r=document.createElement("div");r.className="row";r.innerHTML=`<button class="btn" id="again">Play again</button>`;s.appendChild(r);$("#again").onclick=matchStart;$("#again").focus();}
+  }else{M.miss++;$("#miss").textContent=M.miss;bump(false);b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake")}
+}
+
+// ---------- spot the error ----------
+let S={};
+function spotStart(){S={list:shuffle(SPOT.filter(x=>inTopic(x[0]))).slice(0,10),i:0,score:0,answered:false};if(!S.list.length)S.list=shuffle(SPOT).slice(0,10);spotRender()}
+function spotRender(){
+  const s=$("#stage"),x=S.list[S.i];
+  if(!x){s.innerHTML=`<div class="summary"><div class="tag">Round complete</div><h2>${S.score} / ${S.list.length}</h2><p>Every false statement here was a real slip in your original notes or a common trap.</p></div><div class="row"><button class="btn" id="again">New round</button></div>`;$("#again").onclick=spotStart;return}
+  S.answered=false;
+  s.innerHTML=`<div class="meta"><span>Statement ${S.i+1} / ${S.list.length} · ${TOPICS[x[0]]}</span><span>score ${S.score}</span></div>
+  <div class="bar"><i style="width:${S.i/S.list.length*100}%"></i></div>
+  <div class="tag">Is this line from the notes correct?</div>
+  <div class="note">${esc(x[1])}</div>
+  <div class="choices"><button class="choice" id="c0" data-v="1"><span class="k">1</span><span>Correct as written</span></button><button class="choice" id="c1" data-v="0"><span class="k">2</span><span>Has an error</span></button></div>
+  <div id="fb"></div>`;
+  s.querySelectorAll(".choice").forEach(b=>b.onclick=()=>spotAnswer(b.dataset.v==="1",b));
+}
+function spotAnswer(v,btn){
+  if(S.answered)return;S.answered=true;
+  const x=S.list[S.i],ok=v===x[2];if(ok)S.score++;bump(ok);
+  document.querySelectorAll(".choice").forEach(b=>{b.disabled=true;if((b.dataset.v==="1")===x[2])b.classList.add("right");else if(b===btn)b.classList.add("wrong")});
+  $("#fb").innerHTML=`<div class="feedback ${ok?"ok":"no"}"><span class="status">${ok?"200 OK":"400 Bad Request"}</span><p>${esc(x[3])}</p></div>
+  <div class="row" style="margin-top:12px"><button class="btn" id="next">${S.i+1<S.list.length?"Next statement":"See results"}</button></div>`;
+  $("#next").onclick=()=>{S.i++;spotRender()};$("#next").focus();
+}
+
+
+// ---------- boot ----------
+function start(){
+  clearInterval(M.timer);cancelAnimationFrame(T.raf);
+  const trail=mode==="trail";$("#trail").hidden=!trail;$("#stage").hidden=trail;
+  ({trail:trailStart,cards:cardsStart,match:matchStart,spot:spotStart})[mode]();
+}
+document.addEventListener("keydown",e=>{
+  if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"||e.metaKey||e.ctrlKey||e.altKey)return;
+  if(mode==="trail"){
+    const encOpen=!$("#enc").hidden;
+    if(!encOpen&&!T.busy&&$("#summary").hidden&&T.branches.length){
+      const B=T.branches,map={ArrowLeft:B[0],ArrowRight:B[B.length-1],ArrowUp:B.length===3?B[1]:null,"1":B[0],"2":B[1],"3":B[2]};
+      if(map[e.key]){e.preventDefault();choose(map[e.key])}
+      return;
+    }
+    if(encOpen&&/^[1-4]$/.test(e.key)){const b=$("#encCard #c"+(+e.key-1));if(b&&!b.disabled)b.click()}
+    return;
+  }
+  if(mode==="cards"&&e.key===" "&&$("#card")){e.preventDefault();$("#card").classList.toggle("flip");return}
+  if(mode==="spot"&&/^[1-2]$/.test(e.key)){const b=$("#stage #c"+(+e.key-1));if(b&&!b.disabled)b.click()}
+});
+function fitView(){const narrow=innerWidth<600,sc=$("#scene");sc.setAttribute("viewBox",narrow?"130 40 540 460":"0 0 800 500");sc.style.aspectRatio=narrow?"540/460":"800/500"}
+addEventListener("resize",fitView);fitView();
+renderTopics();start();
+</script>
+</body>
+</html>
