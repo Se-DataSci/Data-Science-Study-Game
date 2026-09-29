@@ -44,7 +44,7 @@ header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-be
 .stats{display:flex;gap:8px;font-family:var(--mono);font-size:13px}
 .stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-variant-numeric:tabular-nums}
 .stat b{color:var(--accent)}
-nav.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:var(--surface2);padding:5px;border-radius:12px}
+nav.modes{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:var(--surface2);padding:5px;border-radius:12px}
 nav.modes button{font:600 15px var(--body);border:0;background:transparent;color:var(--muted);padding:10px 6px;border-radius:8px;cursor:pointer}
 nav.modes button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(20,33,61,.15)}
 nav.modes button small{display:block;font:500 11px var(--mono);opacity:.8}
@@ -131,6 +131,22 @@ button:focus-visible,.card:focus-visible{outline:3px solid var(--accent);outline
 .note{font-family:var(--mono);font-size:15px;line-height:1.6;background:var(--amber-bg);border-left:4px solid var(--amber);padding:14px 16px;border-radius:0 10px 10px 0}
 .tag{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 
+/* desert (Deep Dive) */
+.scene-wrap.desert{--grass:#EBCF9A;--grass2:#D9B878;--dirt:#D2A56A;--dirt-hi:#E2BC84;--dirt-edge:#B7894F;--shd:rgba(110,70,20,.2);
+  --cactus:#5E8C4A;--cactus2:#7CAA62;--redrock:#C0683F;--redrock2:#DA8B5F;--tumble:#9C7B4F;--bone:#F6F0E1;--dry:#B89A5C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .scene-wrap.desert{--grass:#3B3226;--grass2:#4A3E2E;--dirt:#5E4B33;--dirt-hi:#72603F;--dirt-edge:#4A3B28;--shd:rgba(0,0,0,.35);
+  --cactus:#3E6B40;--cactus2:#4F8250;--redrock:#7C4631;--redrock2:#95593D;--tumble:#7A6243;--bone:#CFC6B2;--dry:#6E5C3C}}
+:root[data-theme="dark"] .scene-wrap.desert{--grass:#3B3226;--grass2:#4A3E2E;--dirt:#5E4B33;--dirt-hi:#72603F;--dirt-edge:#4A3B28;--shd:rgba(0,0,0,.35);
+  --cactus:#3E6B40;--cactus2:#4F8250;--redrock:#7C4631;--redrock2:#95593D;--tumble:#7A6243;--bone:#CFC6B2;--dry:#6E5C3C}
+#heatRect{pointer-events:none} .scene-wrap:not(.desert) #heatRect{display:none}
+.sandmark{stroke:var(--grass2);stroke-width:2.5;stroke-linecap:round;fill:none}
+.cactus{fill:var(--cactus)} .cactus2{fill:var(--cactus2)} .redrock{fill:var(--redrock)} .redrock2{fill:var(--redrock2)}
+.tumble{fill:none;stroke:var(--tumble);stroke-width:2;stroke-linecap:round} .bone{fill:var(--bone)} .dry{stroke:var(--dry);stroke-width:2.5;stroke-linecap:round;fill:none}
+.deep{--c:#B8562F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .deep{--c:#E8946B}}
+:root[data-theme="dark"] .deep{--c:#E8946B}
+.sign .btxt{font:800 12px var(--mono);fill:var(--badge-ink);text-anchor:middle;dominant-baseline:central;pointer-events:none;letter-spacing:.02em}
+.ctx{font:14px/1.5 var(--mono);background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0;overflow-x:auto;white-space:pre}
 /* short answer */
 .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
 #sa{width:100%;font:16px/1.45 var(--body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;resize:vertical;min-height:84px}
@@ -187,7 +203,7 @@ button:focus-visible,.card:focus-visible{outline:3px solid var(--accent);outline
 .stage .missed li{border-left-width:1px}
 kbd{font:600 11px var(--mono);border:1px solid var(--line);border-radius:4px;padding:0 4px;background:var(--surface)}
 footer{color:var(--muted);font-size:13px}
-@media (max-width:560px){nav.modes{grid-template-columns:repeat(2,1fr)} .match{grid-template-columns:1fr} .prompt{font-size:12px;top:8px} .prompt kbd{display:none}}
+@media (max-width:560px){nav.modes{grid-template-columns:repeat(2,1fr)} nav.modes button:last-child{grid-column:1/-1} .match{grid-template-columns:1fr} .prompt{font-size:12px;top:8px} .prompt kbd{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -197,6 +213,7 @@ footer{color:var(--muted);font-size:13px}
     <symbol id="i-easy" viewBox="0 0 24 24"><path d="M20 4C10 4.5 4.5 9.5 4.5 17.5c0 .9.1 1.7.2 2.5l1.6-1.6C7.5 12.5 11 9 15.5 7.5 12 9.8 9 13 7.6 17.2 14.6 17.4 19.8 12.5 20 4z"/></symbol>
     <symbol id="i-medium" viewBox="0 0 24 24"><path d="M13.5 2 5 13.5h6L9.8 22 19 10h-6.2z"/></symbol>
     <symbol id="i-hard" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C7 2 3.5 5.6 3.5 10.2c0 2.9 1.4 5.2 3.5 6.5V20a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-3.3c2.1-1.3 3.5-3.6 3.5-6.5C20.5 5.6 17 2 12 2zM6.9 11a1.9 1.9 0 1 0 3.8 0a1.9 1.9 0 1 0-3.8 0zM13.3 11a1.9 1.9 0 1 0 3.8 0a1.9 1.9 0 1 0-3.8 0zM12 14l-1.3 2.2h2.6zM10.1 18.2h1.1V21h-1.1zM12.8 18.2h1.1V21h-1.1z"/></symbol>
+    <symbol id="i-cactus" viewBox="0 0 24 24"><path d="M10 22V5.5a2 2 0 0 1 4 0V22zM14 13h2a1 1 0 0 0 1-1V8.5a1.5 1.5 0 0 1 3 0V12a4 4 0 0 1-4 4h-2zM10 15H8a4 4 0 0 1-4-4V8.5a1.5 1.5 0 0 1 3 0V11a1 1 0 0 0 1 1h2z"/></symbol>
     <symbol id="i-mystery" viewBox="0 0 24 24"><path d="M12 2.5c-3.6 0-6.2 2.2-6.4 5.5h3.6c.2-1.4 1.2-2.3 2.7-2.3 1.6 0 2.6.9 2.6 2.2 0 1.1-.5 1.7-1.9 2.6-1.8 1.1-2.5 2.3-2.4 4.3v.9h3.5v-.7c0-1.2.4-1.7 1.9-2.6 1.8-1.1 2.8-2.5 2.8-4.6 0-3.3-2.7-5.6-6.4-5.6zM12 17.4a2.1 2.1 0 1 0 0 4.2 2.1 2.1 0 0 0 0-4.2z"/></symbol>
   </defs>
 </svg>
@@ -215,6 +232,7 @@ footer{color:var(--muted);font-size:13px}
 
   <nav class="modes" aria-label="Game mode">
     <button id="m-trail" data-mode="trail" aria-pressed="true">Trail<small>10-stop round</small></button>
+    <button id="m-deep" data-mode="deep" aria-pressed="false">Deep Dive<small>desert · short answer</small></button>
     <button id="m-cards" data-mode="cards" aria-pressed="false">Flashcards<small>flip + sort</small></button>
     <button id="m-match" data-mode="match" aria-pressed="false">Match<small>beat the clock</small></button>
     <button id="m-spot" data-mode="spot" aria-pressed="false">Spot the Error<small>true or false</small></button>
@@ -224,22 +242,28 @@ footer{color:var(--muted);font-size:13px}
 
   <section id="trail" style="display:flex;flex-direction:column;gap:12px">
     <div class="hud">
-      <span>Stop <b id="stopN">1</b> / 10</span>
+      <span>Stop <b id="stopN">1</b> / <span id="totN">10</span></span>
       <ol class="dots" id="dots" aria-label="Trail progress"></ol>
       <span>Score <b id="scoreN">0</b></span>
     </div>
     <div class="scene-wrap" id="sceneWrap">
       <svg id="scene" viewBox="0 0 800 500" role="img" aria-label="Trail map. Choose a path with the arrow keys or by clicking a sign.">
         <defs>
+          <radialGradient id="heat" cx="50%" cy="0%" r="75%"><stop offset="0" stop-color="#FFC46E" stop-opacity=".28"/><stop offset="1" stop-color="#FFC46E" stop-opacity="0"/></radialGradient>
+          <pattern id="sandPat" width="140" height="110" patternUnits="userSpaceOnUse">
+            <rect width="140" height="110" class="grassbg"/>
+            <path class="sandmark" d="M8 30q14-7 28 0t28 0M78 78q14-7 28 0t28 0M30 96q10-5 20 0"/>
+          </pattern>
           <pattern id="grassPat" width="96" height="96" patternUnits="userSpaceOnUse">
             <rect width="96" height="96" class="grassbg"/>
             <path class="grassmark" d="M14 26l-2-7M18 26v-8M22 26l2-7M66 74l-2-7M70 74v-8M74 74l2-7M58 20l-1-5M61 20v-6"/>
           </pattern>
         </defs>
         <g id="world">
-          <rect x="-20000" y="-400000" width="40000" height="402000" fill="url(#grassPat)"/>
+          <rect id="ground" x="-20000" y="-400000" width="40000" height="402000" fill="url(#grassPat)"/>
           <g id="paths"></g><g id="scenery"></g><g id="markers"></g>
         </g>
+        <rect id="heatRect" x="-600" y="0" width="2000" height="500" fill="url(#heat)"/>
         <g id="hero" transform="translate(400 460) scale(1.15)">
           <ellipse cx="0" cy="2" rx="17" ry="6" class="shd"/>
           <g id="heroFlip"><g id="heroBody">
@@ -529,6 +553,161 @@ const SA=[
  "What the project is and why, installation/requirements (setup), and a quick start showing how to use it.",["What / why","Installation & requirements","Quick start / usage"],"README"]
 ];
 
+
+// ---------- Deep Dive bank: exam-style short answers ----------
+// [topic, Bloom level, question, context block (table/code) or null, keyword groups, groups needed, model answer, labels]
+const DEEP=[
+// ---- Privacy ----
+["priv","Analyze","The table below is being released for research. Using Age and ZIP as the quasi-identifiers, what is the largest k for which it is k-anonymous? Explain how you got it.",
+`Age    ZIP     Diagnosis
+20-29  282**   Flu
+20-29  282**   Asthma
+20-29  282**   Flu
+30-39  281**   Diabetes
+30-39  281**   Flu`,
+ [["k 2","k is 2","k of 2","k equals 2","k would be 2","2-anonymous","2 anonymous","two","k=2"],["smallest","only 2","only two","size 2","group of 2","group of two","2 records","two records","30-39","281","fewest","minimum","least"]],2,
+ "k = 2. The records form two groups on (Age, ZIP): (20–29, 282**) with 3 people and (30–39, 281**) with 2. k is the size of the smallest group.",["States k = 2","Explains it's the smallest group size"]],
+["priv","Analyze","This table is 3-anonymous. An attacker knows their 45-year-old neighbor in ZIP 28314 is in it. What does the attacker learn, and which privacy property does the table fail?",
+`Age    ZIP    Diagnosis
+40-49  283**  HIV
+40-49  283**  HIV
+40-49  283**  HIV
+50-59  284**  Flu
+50-59  284**  Cancer
+50-59  284**  Asthma`,
+ [["hiv"],["l-divers","l divers","ldivers","homogen","diversity"]],2,
+ "The neighbor falls in the 40–49 / 283** group, and everyone there has HIV, so the attacker learns the diagnosis anyway. The table fails l-diversity (a homogeneity attack).",["Learns the neighbor has HIV","Fails l-diversity"]],
+["priv","Apply","A dataset has these columns: Name, SSN, ZIP, Birth Date, Gender, Salary. Classify each one as a direct identifier, a quasi-identifier, or a sensitive attribute.",null,
+ [["direct"],["quasi"],["sensitive"]],3,
+ "Direct identifiers: Name, SSN. Quasi-identifiers: ZIP, Birth Date, Gender. Sensitive attribute: Salary.",["Direct: Name, SSN","Quasi: ZIP, Birth Date, Gender","Sensitive: Salary"]],
+["priv","Evaluate","A hospital will share patient data with researchers studying age-related illness. Compare suppression and generalization for the Age column, and recommend one.",null,
+ [["generaliz","range","bracket","bucket"],["remov","lose","lost","destroy","no longer","can't study","cannot study","useless","gone","delet","entire column","whole column"],["recommend generaliz","use generaliz","choose generaliz","generalization is better","generalization because","go with generaliz","prefer generaliz","generalization would","generalization since","pick generaliz","generalization, because","generalization."]],2,
+ "Suppression removes the Age column entirely, which protects privacy but makes the age study impossible. Generalization turns ages into ranges (30–39), which keeps the age trend while making individuals harder to single out. Recommend generalization.",["Generalization = ranges","Suppression loses the data needed","Recommends generalization"]],
+["priv","Understand","Explain the difference between pseudonymization and anonymization. Give one reason a company might choose pseudonymization.",null,
+ [["revers","key","re-identif","reidentif","link back","lookup","look up","token"],["cannot","can't","irreversib","permanent","not revers","no way","never"],["link","track","follow","over time","join","merge","update","contact","later","audit","future"]],2,
+ "Pseudonymized data swaps identifiers for tokens and can be reversed with a key; anonymized data can't be traced back to anyone. A company might pseudonymize so it can still link records over time, update them, or re-contact people when needed.",["Pseudonymization is reversible (key)","Anonymization is not reversible","A reason, e.g. link/track records later"]],
+["priv","Create","Design an anonymization plan for a student dataset (Name, Student ID, ZIP, Age, Major, GPA) that will be shared with another university. Give at least three steps.",null,
+ [["suppress","remov","drop","delet","pseudonym","take out"],["generaliz","range","bucket","truncat","mask","group"],["k-anon","k anon","l-divers","l divers","t-close","check","verify","test"],["minimi","only need","only the columns","necessary","needed","relevant"]],3,
+ "1) Suppress or pseudonymize Name and Student ID. 2) Generalize quasi-identifiers: ZIP to its first 3 digits, Age to ranges. 3) Drop any columns the other school doesn't need (minimization). 4) Check the result is k-anonymous and l-diverse before sharing GPA.",["Remove/pseudonymize direct identifiers","Generalize quasi-identifiers","Check k-anonymity / l-diversity","Minimize columns"]],
+// ---- APIs & Auth ----
+["api","Apply","A mobile app needs to (a) load a user's profile, (b) create a new post, and (c) change only a post's title. Give the HTTP method for each.",null,
+ [["get"],["post"],["patch"]],3,
+ "(a) GET, (b) POST, (c) PATCH, since only one field changes. PUT would replace the whole post.",["(a) GET","(b) POST","(c) PATCH"]],
+["api","Analyze","A client sends the two requests below. Explain what each response code tells the developer.",
+`POST /api/orders        → 201
+GET  /api/orders/9999   → 404`,
+ [["created","success","made","new order","worked","added"],["not found","doesn't exist","does not exist","no order","missing","wrong id","can't find","cannot find","not exist","no such"]],2,
+ "201 Created: the POST worked and a new order was made. 404 Not Found: there is no order with ID 9999 (wrong ID, or it was deleted).",["201 = created successfully","404 = order doesn't exist"]],
+["api","Analyze","Users get 401 on some requests and 403 on others from the same API. Explain the difference and the fix for each.",null,
+ [["not authenticat","unauthenticat","not logged","log in","login","credential","token","who they are","identity","sign in"],["permission","not allowed","forbidden","authoriz","access","role","scope","privilege","rights"]],2,
+ "401 Unauthorized: the server doesn't know who you are (missing/expired credentials or token). Fix: log in or send a valid token. 403 Forbidden: the server knows who you are but you lack permission. Fix: grant the right role/scope, or don't request it.",["401 = not authenticated → log in / valid token","403 = not permitted → needs permission/role"]],
+["api","Understand","Walk through the three steps of the OAuth 2.0 flow between the client, resource owner, authorization server, and resource server.",null,
+ [["grant","consent","approve","owner"],["access token","token"],["resource server","resources","the data","api","protected"]],3,
+ "1) The client asks the resource owner (user) for permission and gets an authorization grant. 2) The client trades that grant with the authorization server for an access token. 3) The client presents the token to the resource server, which returns the resources.",["Owner gives an authorization grant","Grant is exchanged for an access token","Token is used at the resource server"]],
+["api","Evaluate","An API returns every employee's full record (name, email, SSN, salary) to any logged-in employee, even though most only need names. Identify the principle being violated and propose a fix.",null,
+ [["least privilege","least-privilege","minimum","minimal","least"],["scope","role","only return","limit","restrict","filter","only name","only the name","remove","hide","based on","need to know"]],2,
+ "It violates the principle of least privilege. Fix: return only the fields each role needs (e.g., names for most staff), using scopes or role-based access for sensitive fields like SSN and salary.",["Names least privilege","Limits fields by role/scope"]],
+["api","Understand","What is a bearer token, and why must it only be sent over HTTPS?",null,
+ [["hold","bearer","whoever","anyone","possess","has it","instead of","credential","proof","pass"],["encrypt","intercept","steal","stolen","sniff","eavesdrop","plain text","plaintext","middle","exposed","read it","see it"]],2,
+ "A bearer token is a pass that grants access to whoever holds it, sent instead of your credentials. Over plain HTTP it could be intercepted and reused; HTTPS encrypts it in transit.",["Access for whoever holds it","HTTPS keeps it from being intercepted"]],
+// ---- Version control ----
+["git","Apply","Write the sequence of Git commands to save your changes to report.py and send them to the remote repository.",null,
+ [["add"],["commit"],["push"]],3,
+ "git add report.py → git commit -m \"message\" → git push",["git add","git commit","git push"]],
+["git","Analyze","You run git status and see the output below. What does it mean, and what must you do before committing?",
+`Changes not staged for commit:
+        modified:   app.py`,
+ [["not staged","unstaged","haven't staged","havent staged","not added","but not","staging area","not in the staging","isn't staged","wasn't staged"],["git add","add"]],2,
+ "app.py has been edited but the change isn't in the staging area yet, so a commit wouldn't include it. Run git add app.py first.",["Edited but not staged","Run git add"]],
+["git","Evaluate","A teammate says: “Just use git pull every time. Fetch is pointless.” Argue whether they're right.",null,
+ [["merg"],["review","inspect","look","see","check","before","first","compare","safe","conflict"]],2,
+ "Not quite. Pull = fetch + merge, so it changes your working branch immediately and can cause conflicts. Fetch lets you download and review remote changes first, then merge when you're ready.",["Pull also merges","Fetch lets you review first / avoid surprise conflicts"]],
+["git","Understand","Compare centralized version control (SVN) with distributed version control (Git). Give one advantage of the distributed model.",null,
+ [["central","one server","single server","main server"],["full history","full copy","own copy","every clone","local","offline","each developer","everyone has","backup","no single point"]],2,
+ "SVN keeps the history on one central server that everyone commits to. In Git every clone has the full history, so you can commit offline and there's no single point of failure.",["SVN = one central server","Git advantage: full local history / offline"]],
+["git","Apply","Describe a workflow for adding a new feature to a shared repository without breaking main.",null,
+ [["branch"],["pull request","pr","review"],["merg"]],2,
+ "Create a feature branch, commit and push your work there, open a pull request so teammates can review it, then merge into main once it's approved.",["Work on a branch","Open a pull request for review","Merge when approved"]],
+["git","Understand","What is a docstring, and where does it go?",null,
+ [["explain","describ","document","what it does","purpose","functionality"],["first line","first statement","inside","beginning","top of","start of","under the def","after the def","function","class","module"]],2,
+ "A docstring is text that explains what a function, class, or module does. It goes as the first statement inside that function, class, or module.",["Explains what the code does","First line inside the function/class/module"]],
+// ---- Licenses & docs ----
+["lic","Apply","You're building a closed-source commercial app and find three libraries: one MIT, one GPL, one Apache 2.0. Which can you use without releasing your source code, and why?",null,
+ [["mit"],["apache"],["gpl","copyleft"]],3,
+ "MIT and Apache 2.0, because they're permissive. The GPL library is copyleft: distributing it inside your app would require releasing your changes under the GPL.",["MIT is OK","Apache 2.0 is OK","GPL is the problem (copyleft)"]],
+["lic","Understand","Explain the difference between copyleft and permissive licenses, with an example of each.",null,
+ [["same license","must","share alike","stay open","release","open source","open-source"],["closed","proprietary","don't have to","do not have to","not required","no requirement","any license","not have to"],["gpl"],["mit","apache","bsd"]],3,
+ "Copyleft (e.g., GPL): distributed modifications must use the same license. Permissive (e.g., MIT, Apache 2.0, BSD): you can use and modify it, even in closed-source software.",["Copyleft: changes keep the license","Permissive: can go closed","Copyleft example (GPL)","Permissive example (MIT/Apache/BSD)"]],
+["lic","Understand","What does the Apache 2.0 license provide that the MIT license does not?",null,
+ [["patent"],["notice","state change","changes","attribution"]],1,
+ "An explicit patent grant that protects users from patent claims. It also requires keeping the NOTICE file and stating changes.",["Explicit patent grant","NOTICE / state changes (bonus)"]],
+["lic","Create","Sketch a folder layout and README for a Python data project that someone else must be able to install and run.",null,
+ [["readme"],["src"],["config"],["install","requirement","venv","environment","setup","depend"],["quick start","quickstart","usage","how to run","example"]],3,
+ "README.md (what/why, installation, quick start), requirements.txt, src/ (code and data loading), config/ (settings). The README's installation section shows how to create a venv and install requirements.",["README","src/","config/","Installation / requirements","Quick start / usage"]],
+["lic","Evaluate","During code review, what should a reviewer check, and why is review done before merging?",null,
+ [["correct","bug","work"],["style","design","readab","format","clean"],["test"],["understand","clear","document","docstring","comment"],["before","break","main","catch","prevent","early"]],3,
+ "Check correctness, design/style, whether it's understandable (docstrings), and testing. Reviewing before merging catches problems before they reach main and affect everyone.",["Correctness","Design / style","Testing","Understandable / documented","Catches issues before main"]],
+["lic","Understand","What's the difference between a proprietary license and a permissive license?",null,
+ [["vendor","owner","company keeps","rights","permission","authoriz","not allowed","can't modify","cannot modify","restrict"],["free","anyone","allow","modify","open","use"]],2,
+ "Proprietary: the vendor keeps the rights, and you can't modify or redistribute without authorization (e.g., MATLAB). Permissive: anyone can use and modify it freely, even in closed-source work (e.g., MIT).",["Proprietary: vendor controls it","Permissive: free to use and modify"]],
+// ---- AWS ----
+["aws","Apply","Write the AWS CLI commands to (a) create a bucket named class-data, (b) upload data.csv to it, and (c) list its contents.",null,
+ [["aws s3 mb","s3 mb","mb"],["aws s3 cp","s3 cp","cp"],["aws s3 ls","s3 ls","ls"]],3,
+ "aws s3 mb s3://class-data\naws s3 cp data.csv s3://class-data/\naws s3 ls s3://class-data",["mb to make the bucket","cp to upload","ls to list"]],
+["aws","Analyze","A company's S3 bucket full of customer records was left public, and the data leaked. Using the shared responsibility model, explain who is at fault and why.",null,
+ [["customer","company","their fault","client","user","not aws"],["in the cloud","configur","setting","access","permission","public"]],2,
+ "The customer (the company). AWS secures the cloud itself; the customer is responsible for security IN the cloud, including bucket access settings.",["The customer is responsible","Access settings = security IN the cloud"]],
+["aws","Evaluate","Choose Lambda, EC2, or SageMaker for each and justify: (a) resizing images whenever they're uploaded, (b) a web server running 24/7 with custom software, (c) training and deploying an ML model.",null,
+ [["lambda"],["ec2"],["sagemaker"]],3,
+ "(a) Lambda: short, event-triggered, no servers. (b) EC2: always on and needs full control of the software. (c) SageMaker: managed tools for training and deploying models.",["(a) Lambda","(b) EC2","(c) SageMaker"]],
+["aws","Apply","A new analyst joins for a 3-month project and needs read access to one bucket. A team of five engineers needs the same permissions long-term. Which IAM features fit each?",null,
+ [["role","temporar"],["group"]],2,
+ "The analyst: an IAM role (temporary credentials) with read-only access to that bucket. The engineers: IAM users in an IAM group that holds their shared permissions.",["Analyst → IAM role","Engineers → IAM group"]],
+["aws","Evaluate","Your team stores 10 TB of raw sensor data that's analyzed once a year but must be kept for 7 years. Recommend an S3 storage class and name one trade-off.",null,
+ [["glacier","archive","deep archive"],["slow","hours","retriev","delay","wait","not instant","takes time","fee"]],2,
+ "S3 Glacier (or Glacier Deep Archive): far cheaper for rarely accessed data. Trade-off: retrieval takes minutes to hours, so you can't read it instantly.",["Recommends Glacier","Trade-off: slow retrieval"]],
+["aws","Understand","Explain what “serverless” means, with one advantage and one disadvantage.",null,
+ [["no server","without managing","don't manage","not manage","provider","aws handles","managed","without server","without a server"],["pay","cost","scal","automatic","focus","cheap"],["limit","15","control","cold start","less control","vendor","lock","short"]],2,
+ "The cloud provider runs and scales the servers; you only supply code. Advantage: pay only when it runs, automatic scaling. Disadvantage: less control and limits like Lambda's 15-minute run time.",["Provider manages the servers","Advantage (cost / scaling)","Disadvantage (limits / control)"]],
+// ---- SQL & Deploy ----
+["data","Apply","For the two tables below, identify each table's primary key and the foreign key, and explain how the tables link.",
+`Customers(customer_id, name, email)
+Orders(order_id, customer_id, total)`,
+ [["customer_id","customer id"],["order_id","order id"],["foreign"]],3,
+ "Customers' primary key is customer_id; Orders' primary key is order_id. Orders.customer_id is a foreign key that references Customers.customer_id, linking each order to its customer.",["customer_id (Customers PK)","order_id (Orders PK)","Orders.customer_id is the foreign key"]],
+["data","Analyze","An Orders table stores the customer's full name and address on every row. Identify the problem and how a relational design fixes it.",null,
+ [["redundan","repeat","duplicat","update","inconsisten","anomal","waste"],["separate","own table","customers table","foreign key","normaliz","split","link"]],2,
+ "It's redundant: the same data repeats, wastes space, and can become inconsistent when a customer moves. Put customers in their own table and link orders with a foreign key (normalization).",["Redundancy / inconsistency","Separate table + foreign key"]],
+["data","Evaluate","Pick relational or NoSQL for each and justify: (a) bank transactions, (b) social-media posts where each post can have different fields.",null,
+ [["relational","sql"],["nosql","document","non-relational"],["consisten","structure","schema","transaction","accura","fixed","rollback"],["flexib","vary","different field","json","changing"]],3,
+ "(a) Relational: fixed structure, consistency, and transactions (with ROLLBACK) matter for money. (b) NoSQL document store: flexible fields per post (JSON).",["(a) Relational","(b) NoSQL","Reason for (a): consistency/structure","Reason for (b): flexible fields"]],
+["data","Apply","Describe the path a prediction request takes from a client app to a deployed model and back. Name the components involved.",null,
+ [["api gateway","gateway"],["endpoint"],["model"],["parse","convert","bytes","json","format","deserial","input"],["response","return","predict","result","back"]],3,
+ "The client sends an HTTP POST → API Gateway (secures and routes it) → the model endpoint parses the raw bytes into model input → the model predicts → the response travels back to the client.",["API Gateway","Endpoint","Model","Parses the request","Returns the prediction"]],
+["data","Understand","Why keep a model registry instead of overwriting the model file every time you retrain?",null,
+ [["version","previous","history","older","earlier","roll back","rollback","revert","go back"],["compare","track","audit","which model","reproduc","mistake","broke","bad model","worse"]],1,
+ "The registry keeps versions of each model, so you can roll back if a new one performs worse, compare versions, and track which model is in production.",["Keeps versions / can roll back","Compare / track models"]],
+["data","Understand","What does ROLLBACK do in SQL, and when would you use it?",null,
+ [["undo","revert","cancel","discard","reverse"],["transaction","uncommitted","not committed","before commit","error","mistake","fail"]],2,
+ "ROLLBACK undoes the changes in the current transaction that haven't been committed. Use it when something goes wrong partway through a transaction.",["Undoes changes","Uncommitted transaction / on error"]],
+// ---- AI ethics ----
+["eth","Apply","Classify each system under the EU AI Act's risk tiers: (a) an email spam filter, (b) a résumé-screening AI, (c) a customer-service chatbot, (d) government social scoring.",null,
+ [["minimal"],["high"],["limited"],["unacceptable","banned","ban","prohibit"]],3,
+ "(a) Minimal risk, (b) High risk, (c) Limited risk (must disclose it's AI), (d) Unacceptable risk (banned).",["(a) Minimal","(b) High","(c) Limited","(d) Unacceptable"]],
+["eth","Evaluate","A bank's AI denies someone a loan. Using “right to explanation” and “human in the loop,” describe what the bank should provide or do.",null,
+ [["explain","reason","why","factors","understand"],["human","review","appeal","override","person","officer","staff"]],2,
+ "Explain the main reasons the AI denied the loan (right to explanation), and have a person review the decision with the power to override it (human in the loop).",["Explain the decision","Human review / override"]],
+["eth","Analyze","Name the three things humans must provide in a human-in-the-loop system and why each matters.",null,
+ [["accura","catch","mistake","error","correct"],["transparen","clear","explain","understand"],["accountab","responsib","blame"]],3,
+ "Accuracy: catching the AI's mistakes. Transparency: the decision's reasoning is clear. Accountability: a human is responsible for the outcome.",["Accuracy / catching mistakes","Transparency","Accountability"]],
+["eth","Understand","Describe the EU AI Act's risk pyramid from top to bottom, with what's required at each level.",null,
+ [["unacceptable","ban"],["high"],["limited","transparen"],["minimal","no rule","none"]],3,
+ "Unacceptable: banned. High: strict rules and human oversight. Limited: transparency (e.g., disclose a chatbot). Minimal: no special rules.",["Unacceptable (banned)","High (strict + oversight)","Limited (transparency)","Minimal (none)"]],
+["eth","Evaluate","A startup removes human review from its medical-diagnosis AI to cut costs. Give two risks of this decision.",null,
+ [["mistake","error","wrong","misdiagnos","harm","accura","patient"],["accountab","responsib","liab","blame","legal","law","regulat","high-risk","high risk","eu","comply"],["bias","fair","trust","transparen","explain"]],2,
+ "Mistakes (misdiagnoses) go uncaught and harm patients; no one is accountable; and medical AI is high risk under the EU AI Act, which requires human oversight, so it may break the law.",["Uncaught errors / patient harm","Accountability / legal (high-risk)","Trust / bias / transparency"]]
+];
+
 // ---------- shared ----------
 const $=s=>document.querySelector(s);
 const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -548,8 +727,7 @@ function bump(ok){
 }
 const DIFF={easy:{label:"Easy",pts:100},medium:{label:"Medium",pts:200},hard:{label:"Hard",pts:300},mystery:{label:"Mystery",pts:0}};
 const icon=(d,cls="")=>`<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-${d}"/></svg>`;
-$("#legend").innerHTML=[["easy","Easy · 100 pts · recall (Remember)"],["medium","Medium · 200 pts · explain & classify (Understand)"],["hard","Hard · 300 pts · Apply → Analyze → Evaluate → Create, climbing as the round goes on"],["mystery","Mystery · random difficulty, double points"],["sa","✎ Some Medium and Hard stops are short answer: graded on key ideas, half credit for partial answers"]]
-  .map(([d,t])=>d==="sa"?`<span class="sa-note">${t}</span>`:`<span><span class="ico-dot ${d}">${icon(d)}</span>${t}</span>`).join("");
+
 
 // ---------- svg helpers ----------
 const NS="http://www.w3.org/2000/svg";
@@ -568,7 +746,23 @@ const DRAW={
   tuft(g,s){el("path",{d:`M-6 0l-3-10M0 0v-12M6 0l3-10`,class:"tuft",transform:`scale(${s})`},g)}
 };
 const KINDS=[["tree",.3],["pine",.2],["bush",.18],["rock",.12],["flowers",.12],["tuft",.08]];
-function kind(){let r=Math.random();for(const [k,w] of KINDS){if((r-=w)<0)return k}return "tuft"}
+const DKINDS=[["saguaro",.26],["barrel",.16],["redrock",.2],["tumble",.14],["dryscrub",.16],["bones",.08]];
+Object.assign(DRAW,{
+  saguaro(g,s){el("ellipse",{cx:0,cy:2,rx:16*s,ry:5*s,class:"shd"},g);
+    el("path",{d:`M${-6*s} 0V${-58*s}a${6*s} ${6*s} 0 0 1 ${12*s} 0V0z`,class:"cactus"},g);
+    el("path",{d:`M${6*s} ${-26*s}h${7*s}a${3*s} ${3*s} 0 0 0 ${3*s}-${3*s}V${-44*s}a${4*s} ${4*s} 0 0 1 ${8*s} 0V${-28*s}a${9*s} ${9*s} 0 0 1 ${-9*s} ${9*s}H${6*s}z`,class:"cactus"},g);
+    el("path",{d:`M${-6*s} ${-34*s}h${-6*s}a${3*s} ${3*s} 0 0 1 ${-3*s}-${3*s}V${-48*s}a${4*s} ${4*s} 0 0 0 ${-8*s} 0V${-36*s}a${9*s} ${9*s} 0 0 0 ${9*s} ${9*s}H${-6*s}z`,class:"cactus"},g);
+    el("rect",{x:-2*s,y:-60*s,width:3*s,height:56*s,rx:1.5*s,class:"cactus2"},g)},
+  barrel(g,s){el("ellipse",{cx:0,cy:2,rx:15*s,ry:5*s,class:"shd"},g);el("ellipse",{cx:0,cy:-12*s,rx:13*s,ry:14*s,class:"cactus"},g);
+    el("path",{d:`M${-5*s} ${-24*s}v20M${5*s} ${-24*s}v20`,class:"tumble",style:"stroke:var(--cactus2)"},g);el("circle",{cx:0,cy:-26*s,r:3.5*s,class:"f1"},g)},
+  redrock(g,s){el("ellipse",{cx:0,cy:2,rx:30*s,ry:7*s,class:"shd"},g);el("path",{d:`M${-28*s} 0L${-20*s} ${-26*s}L${-4*s} ${-32*s}L${16*s} ${-24*s}L${28*s} 0Z`,class:"redrock"},g);
+    el("path",{d:`M${-20*s} ${-26*s}L${-4*s} ${-32*s}L${16*s} ${-24*s}L${10*s} ${-18*s}L${-14*s} ${-19*s}Z`,class:"redrock2"},g)},
+  tumble(g,s){el("ellipse",{cx:0,cy:2,rx:12*s,ry:4*s,class:"shd"},g);[0,1,2].forEach(i=>el("circle",{cx:(i-1)*3*s,cy:-12*s+(i%2)*2*s,r:(11-i*2)*s,class:"tumble"},g))},
+  dryscrub(g,s){el("path",{d:"M-9 0l-5-12M-3 0l-2-15M3 0l3-14M9 0l6-10",class:"dry",transform:`scale(${s})`},g)},
+  bones(g,s){el("ellipse",{cx:0,cy:-5*s,rx:9*s,ry:7*s,class:"bone"},g);el("rect",{x:6*s,y:-4*s,width:16*s,height:3*s,rx:1.5*s,class:"bone"},g);
+    el("circle",{cx:-3*s,cy:-6*s,r:1.6*s,class:"h-eye"},g);el("circle",{cx:3*s,cy:-6*s,r:1.6*s,class:"h-eye"},g)}
+});
+function kind(){const K=T&&T.deep?DKINDS:KINDS;let r=Math.random();for(const [k,w] of K){if((r-=w)<0)return k}return K[K.length-1][0]}
 function addScenery(x,y,k,s){
   const g=el("g",{transform:`translate(${x.toFixed(1)} ${y.toFixed(1)})`,"data-y":y});
   DRAW[k](g,s);
@@ -580,8 +774,8 @@ function scatter(cx,y0,y1,avoid,count){
   let placed=0,tries=0;
   while(placed<count&&tries<count*12){
     tries++;
-    const x=cx+rand(-640,640),y=rand(y0,y1),k=kind(),s=k==="tuft"||k==="flowers"?rand(.9,1.3):rand(.8,1.35);
-    const pad=(k==="tree"||k==="pine")?62:46;
+    const x=cx+rand(-640,640),y=rand(y0,y1),k=kind(),s=k==="tuft"||k==="flowers"||k==="dryscrub"?rand(.9,1.3):rand(.8,1.35);
+    const pad=(k==="tree"||k==="pine"||k==="saguaro"||k==="redrock")?62:46;
     if(avoid.some(([px,py])=>Math.hypot(px-x,py-y)<pad))continue;
     addScenery(x,y,k,s);placed++;
   }
@@ -607,9 +801,12 @@ function floatText(txt,color){
 let T={};
 function camera(){W.world.setAttribute("transform",`translate(${(400-T.hx).toFixed(2)} ${(460-T.hy).toFixed(2)})`)}
 function setPrompt(html){const p=$("#prompt");p.hidden=!html;if(html)p.innerHTML=html}
-function trailStart(){
+function trailStart(deep=false){
   cancelAnimationFrame(T.raf);
-  T={step:0,score:0,log:[],used:new Set(),units:new Set(),topics:{},hx:0,hy:0,busy:false,branches:[],cur:null,raf:0};
+  T={deep,len:10,step:0,score:0,log:[],used:new Set(),units:new Set(),topics:{},hx:0,hy:0,busy:false,branches:[],cur:null,raf:0};
+  if(deep){const n=DEEP.filter(d=>inTopic(d[0])).length;T.len=Math.min(10,n)}
+  $("#sceneWrap").classList.toggle("desert",deep);$("#ground").setAttribute("fill",deep?"url(#sandPat)":"url(#grassPat)");
+  $("#totN").textContent=T.len;setLegend();
   W.paths.innerHTML="";W.scenery.innerHTML="";W.markers.innerHTML="";W.fx.innerHTML="";
   $("#summary").hidden=true;$("#sceneWrap").hidden=false;$("#legend").hidden=false;$("#enc").hidden=true;
   face(1);bob(0,false);camera();
@@ -619,15 +816,16 @@ function trailStart(){
   renderHud();makeFork();
 }
 function renderHud(){
-  $("#stopN").textContent=Math.min(T.step+1,10);$("#scoreN").textContent=T.score.toLocaleString();
-  $("#dots").innerHTML=Array.from({length:10},(_,i)=>{
+  $("#stopN").textContent=Math.min(T.step+1,T.len);$("#scoreN").textContent=T.score.toLocaleString();
+  $("#dots").innerHTML=Array.from({length:T.len},(_,i)=>{
     const l=T.log[i];
-    if(l)return `<li class="${l.credit===1?"ok":l.credit?"half":"no"} ${l.actual}" title="Stop ${i+1}: ${DIFF[l.actual].label}, ${l.credit===1?"correct":l.credit?"partial credit":"missed"}">${icon(l.actual)}</li>`;
+    if(l)return `<li class="${l.credit===1?"ok":l.credit?"half":"no"} ${T.deep?"deep":l.actual}" title="Stop ${i+1}: ${T.deep?TOPICS[l.q.t]:DIFF[l.actual].label}, ${l.credit===1?"correct":l.credit?"partial credit":"missed"}">${icon(T.deep?"cactus":l.actual)}</li>`;
     return `<li class="${i===T.step?"now":""}" title="Stop ${i+1}"></li>`;
   }).join("");
 }
 function makeFork(){
-  const n=Math.random()<.65?3:2, offs=n===3?[-230,0,230]:[-165,165], diffs=shuffle(Object.keys(DIFF)).slice(0,n);
+  const opts=T.deep?deepOptions():null;
+  const n=T.deep?opts.length:(Math.random()<.65?3:2), offs=n===3?[-230,0,230]:n===2?[-165,165]:[0], diffs=T.deep?opts.map(()=>"deep"):shuffle(Object.keys(DIFF)).slice(0,n);
   const cx=T.hx,cy=T.hy;
   const gP=el("g",{"data-y":cy},W.paths),gM=el("g",{"data-y":cy},W.markers);
   const avoid=[];
@@ -637,13 +835,16 @@ function makeFork(){
     const bg=el("g",{class:"branch fresh"},gP);
     el("path",{d,class:"edge"},bg);const dirt=el("path",{d,class:"dirt"},bg);const hit=el("path",{d,class:"hit"},bg);
     const sx=ex+(dx>0?-50:50),sy=ey-6,dd=diffs[i];
-    const sg=el("g",{class:`sign fresh ${dd}`,transform:`translate(${sx.toFixed(1)} ${sy.toFixed(1)})`,role:"button",tabindex:"-1","aria-label":`${DIFF[dd].label} path`},gM);
+    const op=T.deep?opts[i]:null;
+    const sg=el("g",{class:`sign fresh ${dd}`,transform:`translate(${sx.toFixed(1)} ${sy.toFixed(1)})`,role:"button",tabindex:"-1","aria-label":op?`${op.label} path`:`${DIFF[dd].label} path`},gM);
     el("rect",{x:-3,y:-26,width:6,height:28,rx:2,class:"post"},sg);
     el("circle",{r:24,cy:-30,class:"badge"},sg);
-    const u=el("use",{href:"#i-"+dd,x:-13,y:-43,width:26,height:26,class:"ico"},sg);
+    let u=null;
+    if(op){const t=el("text",{x:0,y:-30,class:"btxt"},sg);t.textContent=op.abbr}
+    else u=el("use",{href:"#i-"+dd,x:-13,y:-43,width:26,height:26,class:"ico"},sg);
     const lbl=el("text",{y:-62,"text-anchor":"middle",class:"slabel"},sg);
-    lbl.textContent=dd==="mystery"?"???":`${DIFF[dd].label.toUpperCase()} ${DIFF[dd].pts}`;
-    const b={ex,ey,diff:dd,bg,sg,dirt,u,lbl};
+    lbl.textContent=op?op.label:dd==="mystery"?"???":`${DIFF[dd].label.toUpperCase()} ${DIFF[dd].pts}`;
+    const b={ex,ey,diff:dd,op,bg,sg,dirt,u,lbl};
     const on=()=>{bg.classList.add("hover");sg.classList.add("hover")},off=()=>{bg.classList.remove("hover");sg.classList.remove("hover")};
     [hit,sg].forEach(x=>{x.addEventListener("click",()=>choose(b));x.addEventListener("pointerenter",on);x.addEventListener("pointerleave",off)});
     avoid.push(...samples(dirt),[sx,sy-30],[sx,sy-60]);
@@ -654,7 +855,7 @@ function makeFork(){
   [W.paths,W.markers,W.scenery].forEach(layer=>[...layer.children].forEach(c=>{if(+c.dataset.y>cy+700)c.remove()}));
   T.busy=false;
   const keys=n===3?"<kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd>":"<kbd>←</kbd><kbd>→</kbd>";
-  setPrompt(`Stop ${T.step+1} of 10 · choose a path ${keys}`);
+  setPrompt(`${T.deep?"Deep Dive · ":""}Stop ${T.step+1} of ${T.len} · choose a ${T.deep?(topic==="all"?"topic":"level"):"path"} ${n>1?keys:"<kbd>↑</kbd>"}`);
   renderHud();
 }
 function choose(b){
@@ -669,6 +870,7 @@ function choose(b){
   T.raf=requestAnimationFrame(frame);
 }
 function arrive(b){
+  if(T.deep){setTimeout(()=>showEnc({q:buildDeep(b.op),actual:"hard",deep:true,mystery:false,pts:300}),250);return}
   let actual=b.diff,mystery=false;
   if(b.diff==="mystery"){
     mystery=true;actual=pick(["easy","medium","hard"]);
@@ -749,11 +951,12 @@ const STATUS={full:["ok","200 OK"],partial:["half","206 Partial Content"],miss:[
 
 function showEnc(E){
   T.cur=E;T.answered=false;const q=E.q;
-  const head=`<div class="meta"><span>Stop ${T.step+1} / 10 · ${TOPICS[q.t]} · Bloom: ${q.bloom}</span>
-    <span class="dpill ${E.actual}">${icon(E.actual)}${DIFF[E.actual].label}${E.mystery?" · mystery ×2":""} · ${E.pts} pts</span></div>`;
+  const head=`<div class="meta"><span>Stop ${T.step+1} / ${T.len} · ${TOPICS[q.t]} · Bloom: ${q.bloom}</span>
+    ${E.deep?`<span class="dpill deep">${icon("cactus")}Deep Dive · ${E.pts} pts</span>`:`<span class="dpill ${E.actual}">${icon(E.actual)}${DIFF[E.actual].label}${E.mystery?" · mystery ×2":""} · ${E.pts} pts</span>`}</div>`;
   if(q.sa){
     $("#encCard").innerHTML=`${head}<div class="tag">Short answer · a sentence or two · graded on key ideas, not exact wording</div>
     <p class="q">${esc(q.q)}</p>
+    ${q.ctx?`<pre class="ctx">${esc(q.ctx)}</pre>`:""}
     <label class="sr" for="sa">Your answer</label>
     <textarea id="sa" rows="3" placeholder="Type your answer… (Enter to submit, Shift+Enter for a new line)"></textarea>
     <div class="row" id="saBtns"><button class="btn" id="saGo">Submit answer</button><button class="btn ghost" id="saSkip">I'm not sure</button></div>
@@ -773,7 +976,7 @@ function showEnc(E){
   }
   if(innerWidth<700)$("#enc").scrollIntoView({block:"nearest",behavior:reduced?"auto":"smooth"});
 }
-function nextBtn(){return `<div class="row" style="margin-top:12px"><button class="btn" id="next">${T.step===9?"See round summary":"Keep walking"}</button></div>`}
+function nextBtn(){return `<div class="row" style="margin-top:12px"><button class="btn" id="next">${T.step===T.len-1?"See round summary":"Keep walking"}</button></div>`}
 function answer(i){
   if(T.answered)return;T.answered=true;
   const E=T.cur,q=E.q,ok=q.opts[i]===q.a,got=ok?E.pts:0;
@@ -792,7 +995,7 @@ function submitSA(skip){
   const got=Math.round(E.pts*CREDIT[g.level]);
   T.score+=got;floatText(got?`+${got}`:"missed",g.level==="miss"?"var(--bad)":g.level==="partial"?"var(--amber)":"var(--ok)");
   bump(g.level!=="miss");
-  const entry={...E,sa:true,ans,skip,g,level:g.level,credit:CREDIT[g.level],got,ok:g.level==="full",self:false};
+  const entry={...E,deep:!!E.deep,sa:true,ans,skip,g,level:g.level,credit:CREDIT[g.level],got,ok:g.level==="full",self:false};
   T.log.push(entry);renderHud();renderSAFeedback(entry);
 }
 function keyList(q,hits,self){
@@ -814,28 +1017,30 @@ function renderSAFeedback(e){
 }
 function next(){
   $("#enc").hidden=true;T.step++;
-  if(T.step>=10)return summary();
+  if(T.step>=T.len)return summary();
   makeFork();
   if(innerWidth<700)$("#sceneWrap").scrollIntoView({block:"nearest",behavior:reduced?"auto":"smooth"});
 }
 const fmt=n=>Number.isInteger(n)?String(n):n.toFixed(1);
 function summary(){
   renderHud();
-  const right=T.log.reduce((a,l)=>a+l.credit,0),key="s200-trail-"+topic,prev=store.get(key,0),rec=T.score>prev;
+  const right=T.log.reduce((a,l)=>a+l.credit,0),key=(T.deep?"s200-deep-":"s200-trail-")+topic,prev=store.get(key,0),rec=T.score>prev;
   if(rec)store.set(key,T.score);
-  const code=right>=9?"200 OK":right>=7?"201 Created":right>=5?"206 Partial Content":"404 Knowledge Not Found";
+  const frac=right/T.len,code=frac>=.9?"200 OK":frac>=.7?"201 Created":frac>=.5?"206 Partial Content":"404 Knowledge Not Found";
   const tile=(d,L)=>`<div class="${d}"><span class="ico-dot">${icon(d)}</span><span>${DIFF[d].label}<br><b>${fmt(L.reduce((a,l)=>a+l.credit,0))} / ${L.length}</b></span></div>`;
-  const rows=["easy","medium","hard"].map(d=>tile(d,T.log.filter(l=>l.actual===d))).join("")+tile("mystery",T.log.filter(l=>l.mystery));
+  const rows=T.deep
+    ?[...new Set(T.log.map(l=>l.q.t))].map(t=>{const L=T.log.filter(l=>l.q.t===t);return `<div class="deep"><span class="ico-dot">${icon("cactus")}</span><span>${TOPICS[t]}<br><b>${fmt(L.reduce((a,l)=>a+l.credit,0))} / ${L.length}</b></span></div>`}).join("")
+    :["easy","medium","hard"].map(d=>tile(d,T.log.filter(l=>l.actual===d))).join("")+tile("mystery",T.log.filter(l=>l.mystery));
   const missed=T.log.filter(l=>!l.sa&&!l.ok), sas=T.log.filter(l=>l.sa);
-  const tag=l=>`<span class="dpill ${l.actual}">${icon(l.actual)}${DIFF[l.actual].label}${l.mystery?" · mystery":""} · ${TOPICS[l.q.t]} · ${l.q.bloom}</span>`;
-  $("#summary").innerHTML=`<div class="tag">Trail complete${topic!=="all"?` · ${TOPICS[topic]}`:""}</div>
+  const tag=l=>l.deep?`<span class="dpill deep">${icon("cactus")}Deep Dive · ${TOPICS[l.q.t]} · ${l.q.bloom}</span>`:`<span class="dpill ${l.actual}">${icon(l.actual)}${DIFF[l.actual].label}${l.mystery?" · mystery":""} · ${TOPICS[l.q.t]} · ${l.q.bloom}</span>`;
+  $("#summary").innerHTML=`<div class="tag">${T.deep?"Deep Dive complete":"Trail complete"}${topic!=="all"?` · ${TOPICS[topic]}`:""}</div>
   <div class="sum-top"><h2>${T.score.toLocaleString()} pts</h2><div><div class="status" style="color:${right>=7?"var(--ok)":"var(--bad)"}">${code}</div>
-    <div>${fmt(right)} of 10 correct · ${rec?"new best score":`best ${Math.max(prev,T.score).toLocaleString()} pts`}</div></div></div>
+    <div>${fmt(right)} of ${T.len} correct · ${rec?"new best score":`best ${Math.max(prev,T.score).toLocaleString()} pts`}</div></div></div>
   <div class="breakdown">${rows}</div>
   <div><div class="tag" style="margin-bottom:6px">By thinking level (Bloom)</div><div class="lvls">${LV.map(v=>{const L=T.log.filter(l=>l.q.bloom===v);return L.length?`<span class="lvl"><span>${v}</span><b>${fmt(L.reduce((a,l)=>a+l.credit,0))} / ${L.length}</b></span>`:""}).join("")}</div></div>
-  <div><div class="tag" style="margin-bottom:6px">Your path</div><ol class="dots path-recap">${T.log.map((l,i)=>`<li class="${STATUS[l.credit===1?"full":l.credit?"partial":"miss"][0]} ${l.actual}" title="Stop ${i+1}">${icon(l.actual)}</li>`).join("")}</ol></div>
-  ${sas.length?`<div class="tag">Short answers · what I was looking for (${sas.length})</div><ul class="missed">${sas.map(l=>{const [cls,c]=STATUS[l.level];return `<li class="${l.actual}">
-      ${tag(l)}<span class="q2">${esc(l.q.q)}</span>
+  <div><div class="tag" style="margin-bottom:6px">Your path</div><ol class="dots path-recap">${T.log.map((l,i)=>`<li class="${STATUS[l.credit===1?"full":l.credit?"partial":"miss"][0]} ${T.deep?"deep":l.actual}" title="Stop ${i+1}">${icon(T.deep?"cactus":l.actual)}</li>`).join("")}</ol></div>
+  ${sas.length?`<div class="tag">Short answers · what I was looking for (${sas.length})</div><ul class="missed">${sas.map(l=>{const [cls,c]=STATUS[l.level];return `<li class="${l.deep?"deep":l.actual}">
+      ${tag(l)}<span class="q2">${esc(l.q.q)}</span>${l.q.ctx?`<pre class="ctx">${esc(l.q.ctx)}</pre>`:""}
       <span class="yours">Your answer: ${l.skip?"<i>skipped</i>":"“"+esc(l.ans)+"”"} <b class="grade ${cls}">${c}${l.self?" · self-graded":""}</b></span>
       ${keyList(l.q,l.g.hits,l.self)}
       <span class="why"><b>Looking for:</b> ${esc(l.q.model)}</span></li>`}).join("")}</ul>`:""}
@@ -848,6 +1053,38 @@ function summary(){
   $("#again").onclick=trailStart;$("#summary").scrollIntoView({block:"start",behavior:reduced?"auto":"smooth"});
 }
 
+
+// ---------- Deep Dive (desert, all short answer) ----------
+const TABBR={priv:"PRIV",api:"API",git:"GIT",lic:"LIC",aws:"AWS",data:"SQL",eth:"ETH"};
+function deepLeft(){return DEEP.map((d,i)=>({d,i})).filter(o=>inTopic(o.d[0])&&!T.used.has("d"+o.i))}
+function deepOptions(){
+  const left=deepLeft();
+  if(topic==="all"){
+    const ts=[...new Set(left.map(o=>o.d[0]))];
+    return shuffle(ts).sort((a,b)=>(T.topics[a]||0)-(T.topics[b]||0)).slice(0,3)
+      .map(t=>({key:t,kind:"topic",abbr:TABBR[t],label:TOPICS[t].toUpperCase()}));
+  }
+  const lv=[...new Set(left.map(o=>o.d[1]))].sort((a,b)=>LV.indexOf(a)-LV.indexOf(b));
+  return lv.slice(0,3).map(v=>({key:v,kind:"level",abbr:v.slice(0,3).toUpperCase(),label:v.toUpperCase()}));
+}
+function buildDeep(opt){
+  let pool=deepLeft().filter(o=>opt.kind==="topic"?o.d[0]===opt.key:o.d[1]===opt.key);
+  if(!pool.length)pool=deepLeft();
+  const target=2+Math.round(T.step*3/Math.max(1,T.len-1));
+  const best=Math.min(...pool.map(o=>Math.abs(LV.indexOf(o.d[1])-target)));
+  const o=pick(pool.filter(x=>Math.abs(LV.indexOf(x.d[1])-target)===best)),s=o.d;
+  T.used.add("d"+o.i);T.topics[s[0]]=(T.topics[s[0]]||0)+1;
+  return {sa:true,deep:true,t:s[0],bloom:s[1],q:s[2],ctx:s[3],groups:s[4],need:s[5],a:s[6],model:s[6],labels:s[7],unit:"d"+o.i};
+}
+function setLegend(){
+  if(T.deep){
+    $("#legend").innerHTML=`<span><span class="ico-dot deep">${icon("cactus")}</span>Deep Dive · every stop is an exam-style short answer · 300 pts, half credit for partial answers</span>
+    <span class="sa-note">Signs show the ${topic==="all"?"topic":"thinking level"} waiting down each path. Questions get harder (Apply → Create) the deeper you go.</span>`;
+    return;
+  }
+  $("#legend").innerHTML=[["easy","Easy · 100 pts · recall (Remember)"],["medium","Medium · 200 pts · explain & classify (Understand)"],["hard","Hard · 300 pts · Apply → Analyze → Evaluate → Create, climbing as the round goes on"],["mystery","Mystery · random difficulty, double points"],["sa","✎ Some Medium and Hard stops are short answer: graded on key ideas, half credit for partial answers"]]
+    .map(([d,t])=>d==="sa"?`<span class="sa-note">${t}</span>`:`<span><span class="ico-dot ${d}">${icon(d)}</span>${t}</span>`).join("");
+}
 
 // ---------- topics & modes ----------
 function renderTopics(){
@@ -932,15 +1169,15 @@ function spotAnswer(v,btn){
 // ---------- boot ----------
 function start(){
   clearInterval(M.timer);cancelAnimationFrame(T.raf);
-  const trail=mode==="trail";$("#trail").hidden=!trail;$("#stage").hidden=trail;
-  ({trail:trailStart,cards:cardsStart,match:matchStart,spot:spotStart})[mode]();
+  const trail=mode==="trail"||mode==="deep";$("#trail").hidden=!trail;$("#stage").hidden=trail;
+  ({trail:()=>trailStart(false),deep:()=>trailStart(true),cards:cardsStart,match:matchStart,spot:spotStart})[mode]();
 }
 document.addEventListener("keydown",e=>{
   if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"||e.metaKey||e.ctrlKey||e.altKey)return;
-  if(mode==="trail"){
+  if(mode==="trail"||mode==="deep"){
     const encOpen=!$("#enc").hidden;
     if(!encOpen&&!T.busy&&$("#summary").hidden&&T.branches.length){
-      const B=T.branches,map={ArrowLeft:B[0],ArrowRight:B[B.length-1],ArrowUp:B.length===3?B[1]:null,"1":B[0],"2":B[1],"3":B[2]};
+      const B=T.branches,map={ArrowLeft:B[0],ArrowRight:B[B.length-1],ArrowUp:B.length===3?B[1]:B.length===1?B[0]:null,"1":B[0],"2":B[1],"3":B[2]};
       if(map[e.key]){e.preventDefault();choose(map[e.key])}
       return;
     }

@@ -4,6 +4,8 @@ A browser game for studying for a Data Science test. You walk a 2D trail, pick a
 
 **Play it:** open `index.html` in any browser. No install or build step.
 
+To play online (including on a phone), turn on GitHub Pages: **Settings → Pages → Deploy from a branch → main / (root) → Save**. After a minute the game is live at `https://<your-username>.github.io/<repo-name>/`. Free accounts need the repository to be public for Pages.
+
 ## Modes
 
 - **Trail**: the main game. Each fork offers paths marked by difficulty:
@@ -11,6 +13,7 @@ A browser game for studying for a Data Science test. You walk a 2D trail, pick a
   - ⚡ **Medium** (200 pts): explain or classify (true/false on lines from the notes, short answers)
   - 💀 **Hard** (300 pts): scenarios that climb from Apply → Analyze → Evaluate → Create as the round goes on
   - ❓ **Mystery**: a random difficulty worth double points
+- **Deep Dive**: a desert trail where every stop is an exam-style short-answer question (300 pts). Some include a data table, command output, or HTTP log to work from. At each fork you choose which topic to face next, and the questions climb from Apply to Create as you go.
 - **Flashcards**: flip and sort into "got it" / "study again"
 - **Match**: pair terms with definitions against the clock
 - **Spot the Error**: decide whether a line from the notes is correct
